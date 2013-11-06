@@ -11,9 +11,9 @@
 
 {% block sitecss %}
 {{ block.super }}
-{# <link rel="stylesheet" href="{% static 'realtimefec/css/jquery-ui-1.10.3.custom.min.css' %}" /> #}
-<link rel="stylesheet" href="{% static 'realtimefec/css/chosen.min.css' %}" />
 
+<link rel="stylesheet" href="{% static 'realtimefec/css/chosen.min.css' %}" />
+{# <link rel="stylesheet" href="{% static 'realtimefec/css/jquery-ui-1.10.3.custom.min.css' %}" /> #}
 {% endblock sitecss %}
 
 
@@ -38,57 +38,64 @@
         </div>
 
         <div class="form-row clearfix form-break">
-            
+
             <div class="form_spacer">
                 <label>Candidate:</label>
-                <select data-placeholder="Pick a house candidate..."tabindex="2" name="candidate_id" id="candidate_id"  class="dropdown_field_long chosen-select">
+                <select data-placeholder="Pick a house candidate..." tabindex="2" name="candidate_id" id="candidate_id"  class="chosen-select" style="width: 304px;">
                     <option value=''>Any Candidate</option>
                     {% for candidate in candidates %}
                     <option value='{{ candidate.fec_id}}'>{{ candidate.name }} {{ candidate.display_party}} {{ candidate.short_office }}</option>
                     {% endfor %}
                 </select>
             </div>
-            
+
+
             <div class="form_spacer">
-                <label>Committee: </label>
-                <input type="text"  id="search_term" name="search_term" class="text_field"></input>
-                
+                <label>Amendments:</label>
+                <select name="is_superceded" class="chosen-select" id="is_superceded" style="width: 340px;">
+                    <option value=''>All</option>
+                    <option value='False'>only final versions</option>
+                    <option value='True'>only amended originals</option>
+
+                </select>
+
             </div>
+
+
         </div>
 
         <div class="form-row clearfix">
-          
-          <div class="form_spacer">
-              <label>Committee type:</label>
-              <select name="committee_type" id="committee_class" class="dropdown_super_narrow">
-                  <option value=''>All</option>
-                  <option value='H'>House</option>
-                  <option value='S'>Senate</option>                  
-                  <option value='HSP'>Any Candidate</option>
-                  <option value='UOVW'>Super PACs (including hybrids)</option>
-                  <option value='UO'>Super PACs (NOT including hybrids)</option>
-                  <option value='L'>Leadership PAC</option>
-                  <option value='J'>Joint Fundraiser</option>
-                  <option value='P'>Presidential</option>
-                  <option value='E'>Electioneering Communication</option>
-                  <option value='XYZ'>Party Committees</option>
-                  <option value='I'>Non Committees</option>
-                  <option value='C'>Communication Cost</option>
-              </select>
-            </div>
-          
             <div class="form_spacer">
-                <label>Date filed:</label>
-                <select name="time_range" id="time_range" class="dropdown_super_narrow">
-                  <option value='day'>today</option>
-                  <option value='week'>last 7 days</option>
-                  <option value='cycle'>entire cycle</option>
-                </select>
+                <label>Committee:</label>
+                <input type="text"  id="search_term" name="search_term" class="text_field" style="width: 291px" ></input>
+
             </div>
 
-            <div class="form_spacer">
+             <div class="form_spacer">
+                  <label>Committee type:</label>
+                  <select name="committee_type" id="committee_class" class="chosen-select" style="width: 322px;" >
+                      <option value=''>All</option>
+                      <option value='H'>House</option>
+                      <option value='S'>Senate</option>
+                      <option value='HSP'>Any Candidate</option>
+                      <option value='UOVW'>Super PACs (including hybrids)</option>
+                      <option value='UO'>Super PACs (NOT including hybrids)</option>
+                      <option value='L'>Leadership PAC</option>
+                      <option value='J'>Joint Fundraiser</option>
+                      <option value='P'>Presidential</option>
+                      <option value='E'>Electioneering Communication</option>
+                      <option value='XYZ'>Party Committees</option>
+                      <option value='I'>Non Committees</option>
+                      <option value='C'>Communication Cost</option>
+                  </select>
+                </div>
+        </div>
+
+        <div class="form-row clearfix">
+
+          <div class="form_spacer">
                 <label>Period:</label>
-                <select name="form_type" id="period_type" class="dropdown_super_narrow">
+                <select name="form_type" id="period_type" class="chosen-select" style="width: 326px;">
                     <option value=''>All</option>
                     <option value='Q1'>Quarterly: Q1</option>
                     <option value='Q2'>Quarterly: Q2</option>
@@ -110,23 +117,37 @@
                     <option value='M12'>Monthly: Dec.</option>
                 </select>
             </div>
+
             <div class="form_spacer">
                 <label>Year:</label>
-                <select name="year_covered" id="year_covered" class="dropdown_super_narrow" style="width: 100px;">
+                <select name="year_covered" id="year_covered" class="chosen-select" style="width: 137px;">
                     <option value=''>All</option>
                     <option value='2013'>2013</option>
                     <option value='2012'>2012</option>
                 </select>
             </div>
-                        
+
+            <div class="form_spacer">
+                <label>Date filed:</label>
+                <select name="time_range" id="time_range" class="chosen-select" style="width: 155px;">
+                  <option value='day'>today</option>
+                  <option value='week'>last 7 days</option>
+                  <option value='cycle'>entire cycle</option>
+                </select>
+            </div>
+
+
+
+
+
         </div>
 
 
         <div class="form-row clearfix">
           <div class="form_spacer">
-          
+
               <label>Filing Type:</label>
-              <select name="form_type" id="report_type" style="width:150px;">
+              <select name="form_type" id="report_type"  class="chosen-select" style="width:300px;">
                   <option value=''>All</option>
                   <option value='monthly'>Monthly/quarterly reports</option>
                   <option value='ies'>Independent/coordinated expenditures</option>
@@ -138,22 +159,23 @@
 
               </select>
           </div>
-          
+
             <div class="form_spacer">
                 <label>Minimum raised:</label>
-                <input type="text" class="dollar_field" id="min_raised" name="min_raised"></input>
+                <input type="text" class="dollar_field" id="min_raised" name="min_raised" style="width: 60px;"></input>
             </div>
 
             <div class="form_spacer">
                 <label>Minimum cash on hand:</label>
-                <input type="text" class="dollar_field" id="min_coh" name="min_coh"></input>
+                <input type="text" class="dollar_field" id="min_coh" name="min_coh" style="width: 60px;"></input>
             </div>
         </div>
 
         <div class="form-row clearfix form-break">
+
             <div class="form_spacer">
                 <label>Order by:</label>
-                <select name="order_field" class="dropdown_field_narrow" id="ordering">
+                <select name="order_field" class="chosen-select" id="ordering" style="width: 200px; margin-right: 30px;">
                     <option value='-filing_number'>newest-to-oldest</option>
                     <option value='-coh_end'>cash on hand</option>
                     <option value='-tot_raised'>total raised</option>
@@ -161,25 +183,21 @@
                     <option value='committee_name'>committee name</option>
                 </select>
             </div>
-            <div class="form_spacer">
-                <label>Amendments:</label>
-                <select name="is_superceded" class="dropdown_field_narrow" id="is_superceded" style="width: 100px;">
-                    <option value=''>All</option>
-                    <option value='False'>only final versions</option>
-                    <option value='True'>only amended originals</option>
-
-                </select>
-            </div>
             <input type="button" value="Filter Filings" id="load_button" />
         </div>
-        
+
     </div>
 
+
+    <span>Total of 2 results found. Showing 1-2.</span>
+    <span class="tip">Download a csv file of all 2 results.</span>
+
+
     <span id="display_info"></span><span id="csv_info" class="tip"></span>
-    
+
     <div class="pagination_container">
-        <div class="load_next" style="float: right; width: 200px;"></div>
-        <div class="load_previous" style="float: left; width: 200px; z-index:100;"></div>
+        <div class="load_next"></div>
+        <div class="load_previous" ></div>
     </div>
 
     <table id="mainPageTable">
@@ -276,7 +294,7 @@ function get_json_url() {
   if (committee_class.length>0) {
     query_string += "&committee_class=" + committee_class;
   }
-  
+
   year_covered =  $("#year_covered").val();
   if (year_covered.length>0) {
     query_string += "&year_covered=" + year_covered;
@@ -286,24 +304,24 @@ function get_json_url() {
   if (time_range.length>0) {
     query_string += "&time_range=" + time_range;
   }
-  
+
   is_superceded = $('#is_superceded').val();
   if (is_superceded.length>0) {
     query_string += "&is_superceded=" + is_superceded;
   }
-  
+
   report_type = $('#report_type').val();
   if (report_type.length>0) {
     query_string += "&report_type=" + report_type;
   }
-  
+
   search_term = $('#search_term').val();
   if (search_term.length>4) {
     query_string += "&search_term=" + search_term;
   } else {
     $('#search_term').val("");
   }
-  
+
   candidate_id = $('#candidate_id').val();
   if (candidate_id.length>0) {
     query_string += "&candidate_id=" + candidate_id;
@@ -452,7 +470,7 @@ function loadjson(jsonurl) {
                next =  data_loaded.next;
                previous = data_loaded.previous;
 
-              
+
 
                if (next != null) {
                  $( ".load_next" ).html( "<a href=\"javascript:load_next('" + next + "');\">next page<\/a>");
@@ -491,7 +509,7 @@ function loadjson(jsonurl) {
                // This doesn't work sometimes, and also isn't needed in others. wtf?
                // addCommaParser()
                $(".sortable").tablesorter({ widgets: ['zebra']});
-               
+
                if (data_loaded.count <  2000) {
                   var page_re = /&*page=\d+/i;
                   var format_re = /&*format=json/i;
@@ -499,11 +517,11 @@ function loadjson(jsonurl) {
                   console.log("csv url is: " + csvurl);
                   csv_string = ' Download a <a href="' + csvurl + '">csv file of all ' + roundwCommas(data_loaded.count)  + ' results</a>.';
                   $( "#csv_info" ).html(csv_string);
-                  
+
                } else {
                  $( "#csv_info" ).html("");
                }
-               
+
             });
 
 }
@@ -545,10 +563,10 @@ function addMustacheHelpers() {
 }
 
 $(document).ready(function() {
-  
-      
-    $('.chosen-select'  ).chosen({disable_search_threshold: 10});
-    
+
+
+    $('.chosen-select'  ).chosen({disable_search_threshold: 15});
+
     addMustacheHelpers();
 
     $( "#load_button" )
@@ -561,7 +579,7 @@ $(document).ready(function() {
         button_load();
       }
     });
-    
+
    reset_all_fields();
 
    windowhash = window.location.hash;
