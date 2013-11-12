@@ -11,45 +11,52 @@
  {% block rtmain %}
 
 <div class="module">
-Show <select name="filter_display" class="dropdown_field" id="candidate_filter" style="width:200px;">
-  <option value='all'>challengers and incumbents</option>
-  <option value='incumbents'>only incumbents</option>
-  <option value='challengers'>only challengers</option>
-</select></p>
-<table id="mainPageTable" class="sortable">
-            <thead>
-                  <tr id="titles">
-                      <th class="sort">Legislator</th>
-                      <th class="sort">Incumbent</th>
-                      <th class="sort">Party</th>
-                      <th class="sort">District</th>
-                      <th class="sort">Election Year</th>
-                      <th class="sort">Report Date</th>
-                      <th class="sort">Cash on hand</th>
-                      <th class="sort">Raised </th>
-                      <th class="sort">Spent</th>
-                      <th class="sort">Debts</th>
+    <div id="formdiv" class="clearfix">
+        <div class="form-row clearfix form-break">
 
-                  </tr>
-              </thead>
-              <tbody>
-                {% for object in object_list %}
-                  <tr class="{% cycle 'odd' 'even' %}">
-                      <td class="lawmakerName">
-                      <a href="{{object.get_absolute_url}}">{{object.name}}</a>{% if object.not_seeking_reelection %}<a href="#notseekingreelection">*</a>{% endif %}</td>
-                      <td class="incumbency">{{object.incumbency_status }}</td>
-                      <td>{{object.pty}}</td>
-                      <td><a href="{{ object.district.get_absolute_url}}">{{ object.state}}{% if object.office_district %}-{{object.office_district}}{% endif %}</a></td>
-                      <td>{{ object.election_year }}</td>
-                      <td>{{ object.cash_on_hand_date|date:"Y-m-d" }}</td>
-                      <td>${{ object.cash_on_hand|intcomma }}</td>
-                      <td>${{ object.total_receipts|intcomma }}</td>
-                      <td>${{ object.total_disbursements|intcomma }}</td>
-                      <td>{% if object.outstanding_loans %}${{ object.outstanding_loans|intcomma }}{% else %}$0{% endif %}</td>                  </tr>
-                {% endfor %}
-                 
-</tbody>
-</table>
+            Show <select name="filter_display" class="dropdown_field" id="candidate_filter" style="width:200px;">
+                    <option value='all'>challengers and incumbents</option>
+                    <option value='incumbents'>only incumbents</option>
+                    <option value='challengers'>only challengers</option>
+                </select>
+        </div>
+    </div>
+
+
+            <table id="mainPageTable" class="sortable">
+                <thead>
+                      <tr id="titles">
+                          <th class="sort">Legislator</th>
+                          <th class="sort">Incumbent</th>
+                          <th class="sort">Party</th>
+                          <th class="sort">District</th>
+                          <th class="sort">Election Year</th>
+                          <th class="sort">Report Date</th>
+                          <th class="sort">Cash on hand</th>
+                          <th class="sort">Raised </th>
+                          <th class="sort">Spent</th>
+                          <th class="sort">Debts</th>
+
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {% for object in object_list %}
+                      <tr class="{% cycle 'odd' 'even' %}">
+                          <td class="lawmakerName">
+                          <a href="{{object.get_absolute_url}}">{{object.name}}</a>{% if object.not_seeking_reelection %}<a href="#notseekingreelection">*</a>{% endif %}</td>
+                          <td class="incumbency">{{object.incumbency_status }}</td>
+                          <td>{{object.pty}}</td>
+                          <td><a href="{{ object.district.get_absolute_url}}">{{ object.state}}{% if object.office_district %}-{{object.office_district}}{% endif %}</a></td>
+                          <td>{{ object.election_year }}</td>
+                          <td>{{ object.cash_on_hand_date|date:"Y-m-d" }}</td>
+                          <td>${{ object.cash_on_hand|intcomma }}</td>
+                          <td>${{ object.total_receipts|intcomma }}</td>
+                          <td>${{ object.total_disbursements|intcomma }}</td>
+                          <td>{% if object.outstanding_loans %}${{ object.outstanding_loans|intcomma }}{% else %}$0{% endif %}</td>                     </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
 <p id="notseekingreelection">* Not seeking reelection to this office</p>
 </div>
 
@@ -58,7 +65,7 @@ Show <select name="filter_display" class="dropdown_field" id="candidate_filter" 
 
 $(document).ready(function() {
     $( "#candidate_filter" ).val("all");
-    
+
     $( "#candidate_filter" )
     .bind( "change", function() {
       selected = $(this).val();
@@ -70,11 +77,11 @@ $(document).ready(function() {
       } else if (selected == 'challengers') {
         hide_incumbents();
       }
-      var sorting = [[6,1]]; 
-      // sort on the first column 
+      var sorting = [[6,1]];
+      // sort on the first column
       $("#mainPageTable").trigger("sorton",[sorting]);
-      
-      
+
+
     });
 });
 
@@ -113,4 +120,4 @@ function hide_incumbents() {
 </script>
 
 {% endblock %}
-  
+

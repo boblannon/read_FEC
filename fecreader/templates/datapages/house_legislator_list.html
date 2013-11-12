@@ -18,28 +18,42 @@
  {% block rtmain %}
 
 <div class="module">
-  
-<p>
-Show: <select name="filter_display" class="dropdown_field chosen-select" id="candidate_filter" style="width:200px;">
-  <option value='all'>Challengers And Incumbents</option>
-  <option value='incumbents'>Only Incumbents</option>
-  <option value='challengers'>Only Challengers</option>
-</select>
-</p>
-<p>
-      State:
-      <select data-placeholder="Pick a state..." name="state" class="chosen-select" tabindex="2" id="candidate_state_checked" style="width:120px;">
-      </select>
+    <div id="formdiv" class="clearfix">
+        <div class="form-row clearfix">
+            <div class="form_spacer">
+                <label>Show:</label>
+                <select name="filter_display" class="chosen-select" id="candidate_filter" style="width:200px;">
+                    <option value='all'>Challengers And Incumbents</option>
+                    <option value='incumbents'>Only Incumbents</option>
+                    <option value='challengers'>Only Challengers</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-break form-row clearfix">
+            <div class="form_spacer">
+                    <label>State:</label>
+                    <select data-placeholder="Pick a state..." name="state" class="chosen-select" tabindex="2" id="candidate_state_checked" style="width:120px;">
+                    </select>
+            </div>
+            <div class="form_spacer">
+                    <label>Race:</label>
+                    <select data-placeholder="Pick a race..." name="race" class="chosen-select" tabindex="2" id="district_checked" style="width:250px;">
+                    </select>
+            </div>
 
-      Race:
-      <select data-placeholder="Pick a race..." name="race" class="chosen-select" tabindex="2" id="district_checked" style="width:250px;">
-      </select>
+            <div class="form_spacer">
+                    <label>Candidate:</label>
+                    <select data-placeholder="Pick a candidate..." name="candidate" class="chosen-select"  id="candidate_id_checked" style="width:250px;">
+                    </select>
+            </div>
+        </div>
+    </div>
+</div>
 
-      Candidate:
-      <select data-placeholder="Pick a candidate..." name="candidate" class="chosen-select"  id="candidate_id_checked" style="width:250px;">
-      </select>
-</p>
-<table id="mainPageTable" class="sortable">
+
+
+<div class="module">
+    <table id="mainPageTable" class="sortable">
             <thead>
                   <tr id="titles">
                       <th class="sort">Legislator</th>
@@ -70,10 +84,11 @@ Show: <select name="filter_display" class="dropdown_field chosen-select" id="can
                       <td>${{ object.total_disbursements|intcomma }}</td>
                       <td>{% if object.outstanding_loans %}${{ object.outstanding_loans|intcomma }}{% else %}$0{% endif %}</td>                  </tr>
                 {% endfor %}
-                 
+
 </tbody>
 </table>
 <p id="notseekingreelection">* Not seeking reelection to this office</p>
+</div>
 </div>
 <script type="text/javascript" src="{% static 'realtimefec/js/chosen.jquery.min.js' %}"></script>
 
@@ -86,7 +101,7 @@ var states = [
   {% for state in STATE_LIST %}{ 'value':'{{ state.abbrev}}', 'name':'{{state.name}}'}{% if forloop.last %}{% else %}, {% endif %}{% endfor %}
 ]
 
-var races = [ 
+var races = [
   {'name':'Show All', 'value':'0', 'state':'ALL'},
   {% for district in districts %}{ 'value':'{{ district.pk }}', 'name':'{{ district.race_name}}', 'state':'{{ district.state }}'}{% if forloop.last %}{% else %}, {% endif %}{% endfor %}
 ];
@@ -94,7 +109,7 @@ var races = [
 
 candidates = [
   {'name':'Show All', 'value':'0', 'state':'ALL'},
-  {% for candidate in object_list %}{ 'value':'{{ candidate.fec_id }}', 'name':'{{ candidate.name }} {{candidate.display_party }}', 'state':'{{ candidate.state }}', 'raceid':'{{candidate.district.pk}}', 'incumbent':'{{candidate.is_incumbent}}'}{% if forloop.last %}{% else %}, {% endif %}{% endfor %}  
+  {% for candidate in object_list %}{ 'value':'{{ candidate.fec_id }}', 'name':'{{ candidate.name }} {{candidate.display_party }}', 'state':'{{ candidate.state }}', 'raceid':'{{candidate.district.pk}}', 'incumbent':'{{candidate.is_incumbent}}'}{% if forloop.last %}{% else %}, {% endif %}{% endfor %}
 ];
 
 
@@ -120,7 +135,7 @@ function reset_races(stateid) {
   $("#district_checked").trigger("chosen:updated");
   $("#candidate_id_checked").val("0");
   $("#candidate_id_checked").trigger("chosen:updated");
-  
+
 }
 
 function reset_candidates(stateid, raceid, incumbency) {
@@ -130,9 +145,9 @@ function reset_candidates(stateid, raceid, incumbency) {
         if ( raceid==0 || candidates[i].raceid == raceid || candidates[i].state == 'ALL') {
           if ( incumbency=='all' || candidates[i].value==0 ||( incumbency=='incumbents' && candidates[i].incumbent == 'True') || ( incumbency=='challengers' && candidates[i].incumbent == 'False')) {
               candidate_element += '<option value="' + candidates[i].value + '">' + candidates[i].name + '</option>';
-          } 
+          }
         }
-      }  
+      }
   }
   $("#candidate_id_checked").html(candidate_element);
   $("#candidate_id_checked").trigger("chosen:updated");
@@ -142,21 +157,21 @@ function reset_all_fields() {
 
   $(".chosen_select").each(function( index ) {
     $(this).val("0");
-  });  
+  });
 }
 
 
 $(document).ready(function() {
-  
+
   $('.chosen-select'  ).chosen({disable_search_threshold: 10});
   // Add the initial options
   reset_candidates(0,0, 'all');
   reset_races(0);
   make_states();
-  
+
   windowhash = window.location.hash;
   var hashdict = {};
-  
+
   $.each(windowhash.substr(2).split('&'), function(i, elem) {
      var parts = elem.split('=');
      console.log("hashdict parts0 " + parts[0] + " parts 1: " + parts[1]);
@@ -164,21 +179,21 @@ $(document).ready(function() {
      $("#" + parts[0]).trigger("chosen:updated");
      hashdict[parts[0]]=parts[1]
   });
-  
+
   //$("#district_checked").val("1806");
   //$("#district_checked").trigger("chosen:updated");
   console.log("val just set is: " + $("#district_checked").val());
-  
+
   console.log("hashdict is " + hashdict + " district checked= " + hashdict['district_checked']);
-  
-  
-  //reset_races($("#candidate_state_checked").val());  
+
+
+  //reset_races($("#candidate_state_checked").val());
   apply_filters();
   if (hashdict['candidate_id_checked'] == 0) {
     reset_candidates($("#candidate_state_checked").val(), $("#district_checked").val(), $("#candidate_filter").val());
   }
-  
-  
+
+
   $("#district_checked").chosen().change( function() {
      console.log('race_chosen: ' + $("#district_checked").val());
      reset_candidates($("#candidate_state_checked").val(), $("#district_checked").val(), $("#candidate_filter").val());
@@ -195,12 +210,12 @@ $(document).ready(function() {
      reset_candidates($("#candidate_state_checked").val(), $("#district_checked").val(), $("#candidate_filter").val());
 
    });
-   
+
    $( ".chosen-select" )
    .bind( "change", function() {
      apply_filters();
    });
-  
+
 });
 
 
@@ -209,11 +224,11 @@ function apply_filters() {
   district_checked = $("#district_checked").val();
   candidate_id_checked = $("#candidate_id_checked").val();
   candidate_filter = $("#candidate_filter").val();
-  
+
   console.log("Filtering on: state=" + candidate_state_checked + " race: " + district_checked + " candidate_id: " + candidate_id_checked + " incumbency_selected: " + candidate_filter);
 
   query_string = "?";
-    
+
   var query_args = {"candidate_state_checked":candidate_state_checked, "district_checked":district_checked, "candidate_id_checked":candidate_id_checked, "candidate_filter":candidate_filter}
   var num_params = 0;
   for (var key in query_args) {
@@ -226,12 +241,12 @@ function apply_filters() {
       num_params++;
     }
   }
-  
-  
+
+
   if (num_params > 0) {
-    window.location.hash = query_string;  
+    window.location.hash = query_string;
   }
-  
+
   $("#mainPageTable > tbody > tr").each(function(index) {
     cell_text = $(this).find('td.incumbency').text().trim();
     state_text = $(this).find('td.cell_state').text().substring(0,2);
@@ -239,7 +254,7 @@ function apply_filters() {
     id_pieces = id.split("-");
     race_id = id_pieces[0];
     fec_id = id_pieces[1];
-    
+
     display = false;
     if (candidate_filter == 'all' || candidate_filter=='incumbents' && cell_text=='Y' || candidate_filter=='challengers' && cell_text=='N') {
       if (candidate_state_checked == 0 || candidate_state_checked == state_text) {
@@ -257,12 +272,12 @@ function apply_filters() {
     }
     //console.log(index + " cell_text " + cell_text + " state: " + state_text + " race_id: " + race_id + " fec_id: " + fec_id );
   });
-  var sorting = [[6,1]]; 
-  // sort on the first column 
+  var sorting = [[6,1]];
+  // sort on the first column
   $("#mainPageTable").trigger("sorton",[sorting]);
 }
 
 </script>
 
 {% endblock %}
-  
+

@@ -15,23 +15,34 @@
 {% block rtmain %}
 
 <div class="module">
-  <p>
-Show: <select name="filter_display" class="dropdown_field chosen-select" id="candidate_filter" tabindex="2" style="width:200px;">
-    <option value='0'>House And Senate Races</option>
-    <option value='S'>Only Senate Races</option>
-    <option value='H'>Only House Races</option>
-  </select>&nbsp;&nbsp;
-  State:
-  <select data-placeholder="Pick a state..." name="state" class="chosen-select" tabindex="2" id="candidate_state_checked" style="width:120px;">
-  </select>&nbsp;&nbsp;
-  Rothenberg ratings <select name="rating_filter" class="dropdown_field chosen-select" id="rating_filter" tabindex="2" style="width:200px;">
-      <option value='0'>All races</option>
-      <option value='126'>Toss-up races</option>
-      <option value='12637'>Toss-ups and leaners</option>
-    </select>
-    
-  <p>
-    
+    <div id="formdiv" class="clearfix">
+         <div class="form-row clearfix">
+            <div class="form_spacer">
+                <label>Show:</label>
+                <select name="filter_display" class="chosen-select" id="candidate_filter" tabindex="2" style="width:200px;">
+                    <option value='0'>House And Senate Races</option>
+                    <option value='S'>Only Senate Races</option>
+                    <option value='H'>Only House Races</option>
+                </select>
+            </div>
+
+            <div class="form_spacer">
+                <label>State:</label>
+                <select data-placeholder="Pick a state..." name="state" class="chosen-select" tabindex="2" id="candidate_state_checked" style="width:150px;">
+                </select>
+            </div>
+
+            <div class="form_spacer">
+                <label>Rothenberg ratings</label>
+                <select name="rating_filter" class="chosen-select" id="rating_filter" tabindex="2" style="width:200px;">
+                    <option value='0'>All races</option>
+                    <option value='126'>Toss-up races</option>
+                    <option value='12637'>Toss-ups and leaners</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
 <table id="mainPageTable" class="sortable">
             <thead>
                   <tr id="titles">
@@ -55,7 +66,7 @@ Show: <select name="filter_display" class="dropdown_field chosen-select" id="can
                       <td>{% if object.candidate_raised %}${{ object.candidate_raised|intcomma }}{% else %}$0{% endif %}</td>
                       <td>{% if object.candidate_spending %}${{ object.candidate_spending|intcomma }}{% else %}$0{% endif %}</td>
                       <td>{% if object.outside_spending %}${{ object.outside_spending|intcomma }}{% else %}$0{% endif %}</td>
-                      <td>{% if object.total_spending %}${{ object.total_spending|intcomma }}{% else %}$0{% endif %}</td>                  
+                      <td>{% if object.total_spending %}${{ object.total_spending|intcomma }}{% else %}$0{% endif %}</td>
 
                       </tr>
                 {% endfor %}
@@ -92,14 +103,14 @@ function apply_filters() {
   rating_selected = $("#rating_filter").val();
   chamber_selected = $("#candidate_filter").val();
   console.log("Filtering on: state=" + state_selected + " rating: " + rating_selected + " chamber_selected: " + chamber_selected);
-  
-  
-  $("#mainPageTable > tbody > tr").each(function(index) {    
+
+
+  $("#mainPageTable > tbody > tr").each(function(index) {
     cell_text = $(this).find('td.district').text().trim();
     chamber = cell_text.substring(1,2);
     state = cell_text.substring(4,6);
     rating_id = $(this).attr('id');
-    
+
     display = false;
     //console.log(index + " chamber " +chamber + " state" +  state+ "  race_id" + race_id + " rating_id " + rating_id  )
     if (state_selected == 0 || state_selected == state) {
@@ -114,28 +125,28 @@ function apply_filters() {
     } else {
       $(this).hide();
     }
-    
-    
+
+
     //console.log(index + " cell_text " + cell_text + " state: " + state_text + " race_id: " + race_id + " fec_id: " + fec_id );
   });
 }
 
 
 $(document).ready(function() {
-  
+
   $('.chosen-select'  ).chosen({disable_search_threshold: 10});
   make_states();
-  
+
     $( "#candidate_filter" ).val("0");
-    
+
     $( ".chosen-select" )
     .bind( "change", function() {
       apply_filters();
-      var sorting = [[7,1]]; 
-      // sort on the seventh column 
+      var sorting = [[7,1]];
+      // sort on the seventh column
       $("#mainPageTable").trigger("sorton",[sorting]);
-      
-      
+
+
     });
 });
 
