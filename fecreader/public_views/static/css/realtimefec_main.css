@@ -183,6 +183,11 @@ th.sort.header:hover {
     color:#004762;
 }
 
+.highlighted {
+    background-color: #CA5703 !important;
+    background-image:none !important ;
+}
+
 .form-break {
     border-top: 1px dotted #c8c8c3;
     padding-top: 15px;
@@ -203,7 +208,7 @@ th.sort.header:hover {
     font-weight: bold;
     width: auto;
     display: block;
-    float: left;
+    float: none;
     cursor: default;
     padding-right: 10px;
     color:#666;
@@ -268,7 +273,10 @@ th.sort.header:hover {
     line-height: 24px;
     }
 
-
+.chosen-single:hover{
+    color:#00FF00;
+    background-color: #00FF00;
+}
 
 .dollar_field {
     width:105px;
