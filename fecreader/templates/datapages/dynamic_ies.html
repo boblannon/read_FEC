@@ -30,46 +30,51 @@
 
         <div class="form-row clearfix ">
             <div class="form_spacer">
+                <label>Candidate:</label>
+                <select data-placeholder="Pick a candidate..." name="candidate" class="chosen-select"  id="candidate_id_checked" style="width:300px;">
+                </select>
+            </div>
+
+            <div class="form_spacer">
                 <label>State:</label>
-                <select data-placeholder="Pick a state..." name="state" class="chosen-select" tabindex="2" id="candidate_state_checked" style="width:120px;">
+                <select data-placeholder="Pick a state..." name="state" class="chosen-select" tabindex="2" id="candidate_state_checked" style="width:200px;">
                 </select>
             </div>
 
             <div class="form_spacer">
                 <label>Race:</label>
-                <select data-placeholder="Pick a race..." name="race" class="chosen-select" tabindex="2" id="district_checked" style="width:250px;">
+                <select data-placeholder="Pick a race..." name="race" class="chosen-select" tabindex="2" id="district_checked" style="width:300px;">
                 </select>
             </div>
 
-            <div class="form_spacer">
-                <label>Candidate:</label>
-                <select data-placeholder="Pick a candidate..." name="candidate" class="chosen-select"  id="candidate_id_checked" style="width:250px;">
-                </select>
-            </div>
-            
-            
+
+
+
         </div>
 
 
 
 
         <div class="form-row clearfix form-break">
-            <div class="form_spacer">
-                <label>Minimum amount:</label>
-                <input type="text" class="dollar_field" id="min_spent" name="min_spent"></input>
-            </div>
-            
+
             <div class="form_spacer">
                 <label>Outside group:</label>
-                <select name="outside_spender" data-placeholder="Pick a committee..." class="chosen-select" tabindex="2" id="filer_committee_id_number" style="width:200px;">
+                <select name="outside_spender" data-placeholder="Pick a committee..." class="chosen-select" tabindex="2" id="filer_committee_id_number" style="width:300px;">
                   <option value="0">Show All</option>
                   {% for committee in outside_spenders %}<option value="{{ committee.fec_id|upper}}">{{committee.name}}</option> {% endfor %}
                 </select>
             </div>
-            
+
+            <div class="form_spacer">
+                <label>Min. amount:</label>
+                <input type="text" class="dollar_field" id="min_spent" name="min_spent" style="width: 200px"></input>
+            </div>
+
+
+
             <div class="form_spacer">
                 <label>Support/Oppose:</label>
-                <select name="support_oppose" data-placeholder="Pick a committee..." class="chosen-select" id="support_oppose_checked" style="width:100px;">
+                <select name="support_oppose" data-placeholder="Pick a committee..." class="chosen-select" id="support_oppose_checked" style="width:300px;">
                   <option value="0">Show All</option>
                   <option value="S">Support Only</option>
                   <option value="O">Oppose Only</option>
@@ -80,7 +85,7 @@
         </div>
 
         <div class="form-row clearfix form-break">
-            <div class="form_spacer">
+            <div class="form_spacer one-line">
                 <label>Order by:</label>
                 <select class="chosen-select" tabindex="2" name="order_field" id="ordering">
                     <option value='-expenditure_date_formatted'>newest-to-oldest</option>
@@ -132,7 +137,7 @@
         <td>${{{ addcommas expenditure_amount }}}</td>
         <td>{{ expenditure_date_formatted }}</td>
         <td>{{ expenditure_purpose_descrip}}</td>
-        
+
     </tr>
 
 </script>
@@ -145,16 +150,16 @@
 var states = [
   {'name':'Show All', 'value':'0'},
   {% for state in STATE_LIST %}{ 'value':'{{ state.abbrev}}', 'name':'{{state.name}}'}{% if forloop.last %}{% else %}, {% endif %}{% endfor %}
-]    
+]
 
-var races = [ 
+var races = [
   {'name':'Show All', 'value':'0', 'state':'ALL'},
   {% for district in districts %}{ 'value':'{{ district.pk }}', 'name':'{{ district.race_name}}', 'state':'{{ district.state }}'}{% if forloop.last %}{% else %}, {% endif %}{% endfor %}
 ];
 
 candidates = [
   {'name':'Show All', 'value':'0', 'state':'ALL'},
-  {% for candidate in candidates %}{ 'value':'{{ candidate.fec_id }}', 'name':'{{ candidate.name }} {{candidate.display_party }}', 'state':'{{ candidate.state }}', 'raceid':'{{candidate.district.pk}}'}{% if forloop.last %}{% else %}, {% endif %}{% endfor %}  
+  {% for candidate in candidates %}{ 'value':'{{ candidate.fec_id }}', 'name':'{{ candidate.name }} {{candidate.display_party }}', 'state':'{{ candidate.state }}', 'raceid':'{{candidate.district.pk}}'}{% if forloop.last %}{% else %}, {% endif %}{% endfor %}
 ];
 
 
@@ -193,7 +198,7 @@ function reset_candidates(stateid, raceid) {
         if ( raceid==0 || candidates[i].raceid == raceid || candidates[i].state == 'ALL') {
           candidate_element += '<option value="' + candidates[i].value + '">' + candidates[i].name + '</option>';
         }
-      }  
+      }
   }
   $("#candidate_id_checked").html(candidate_element);
   $("#candidate_id_checked").trigger("chosen:updated");
@@ -232,27 +237,27 @@ function get_json_url() {
   if (min_spent.length > 0) {
     query_string += "&min_spent=" + min_spent
   }
-  
+
   state_select = $("#candidate_state_checked").val();
   if (state_select.length > 0) {
     if (state_select != '0') {
       query_string += "&candidate_state_checked=" + state_select
     }
   }
-  
+
   race_select = $("#district_checked").val();
   if (race_select.length > 0) {
     if (race_select != '0') {
       query_string += "&district_checked=" + race_select
     }
   }
-  
+
   candidate_select = $("#candidate_id_checked").val();
   if (candidate_select.length > 0) {
     if (candidate_select != '0') {
       query_string += "&candidate_id_checked=" + candidate_select
     }
-  } 
+  }
 
   support_select = $("#support_oppose_checked").val();
   if (support_select.length > 0) {
@@ -286,7 +291,7 @@ function reset_all_fields() {
   });
   $(".chosen_select").each(function( index ) {
     $(this).val("0");
-  });  
+  });
 
   // default is filing order
   $("#ordering").val('-expenditure_date_formatted');
@@ -408,9 +413,9 @@ function loadjson(jsonurl) {
                   resultrows.push(html);
                };
                $( "#maintablebody" ).html( resultrows.join(""));
-               
-               
-               
+
+
+
                if (data_loaded.count <  2000) {
                    var page_re = /&*page=\d+/i;
                    var format_re = /&*format=json/i;
@@ -458,7 +463,7 @@ function addMustacheHelpers() {
     } else if (object=='O') {
       return_string = '<div class="label-oppose">Oppose</div>';
     }
-    
+
     return new Handlebars.SafeString(return_string);
   });
 
@@ -475,36 +480,36 @@ function addMustacheHelpers() {
 }
 
 $(document).ready(function() {
-  
+
    $('.chosen-select'  ).chosen({disable_search_threshold: 10});
-    
-    
+
+
     // Add the initial options
     reset_candidates(0,0);
     reset_races(0);
     make_states();
-    
-    
+
+
     $("#district_checked").chosen().change( function() {
       console.log('race_chosen: ' + $("#district_checked").val());
       reset_candidates($("#candidate_state_checked").val(), $("#district_checked").val());
     });
-  
+
     $("#candidate_state_checked").chosen().change( function() {
       console.log('state_chosen: ' + $("#candidate_state_checked").val());
       reset_candidates($("#candidate_state_checked").val(), 0);
       reset_races($("#candidate_state_checked").val());
     });
-    
-    
-    
+
+
+
     addMustacheHelpers();
 
     $( "#load_button" )
     .bind( "click", function() {
       button_load();
     });
-    
+
     $("#min_spent").keydown(function(event){
       if(event.keyCode == 13){
         button_load();
@@ -522,8 +527,8 @@ min_spent
       var parts = elem.split('=');
       console.log("hashdict parts0 " + parts[0] + " parts 1: " + parts[1]);
       $("#" + parts[0]).val(parts[1]);
-      
-      
+
+
    });
 
 
@@ -533,7 +538,7 @@ min_spent
    $("#support_oppose_checked").trigger("chosen:updated");
    $("#filer_committee_id_number").trigger("chosen:updated");
    $("#ordering").trigger("chosen:updated");
-  
+
    console.log("hashdict is " + hashdict);
 
    button_load();

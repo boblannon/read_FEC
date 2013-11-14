@@ -171,7 +171,7 @@ th.sort.header:hover {
     background-color: #F5F4F4;
     border: 1px solid #DCDCD8;
     padding: 15px;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     }
 
 .form-row {
@@ -188,6 +188,8 @@ th.sort.header:hover {
     background-image:none !important ;
 }
 
+
+
 .form-break {
     border-top: 1px dotted #c8c8c3;
     padding-top: 15px;
@@ -195,7 +197,7 @@ th.sort.header:hover {
 }
 
 .form_spacer {
-    padding-right:30px;
+    padding-right:20px;
     padding-bottom: 15px;
     float: left;
     }
@@ -214,6 +216,27 @@ th.sort.header:hover {
     color:#666;
     }
 
+.one-line label{
+    float:left !important;
+}
+
+.quick-filter label{
+    padding-top: 7px;
+    float:left;
+}
+
+.quick-filter a{
+    background-color: #e5efee;
+    padding: 5px;
+    color: #666;
+    border: 1px solid #e5e5e5;
+}
+
+.quick-filter a:hover, .quick-filter a:focus{
+    background-color: #CA5703;
+    color: #FFF;
+}
+
 #load_button {
     width: 150px;
     height:36px;
@@ -227,7 +250,6 @@ th.sort.header:hover {
     -moz-border-radius: 5px;
     border-radius: 5px;
     float:right;
-
     }
 
 #load_button:hover, #load_button:focus {
@@ -237,9 +259,9 @@ th.sort.header:hover {
     }
 
 #load_button:active {
-    color: #006186;
+    color: #FFF;
     outline: none;
-    background-color: #FFF;
+    background-color: #c65430;
     }
 
 #load_button[disabled],

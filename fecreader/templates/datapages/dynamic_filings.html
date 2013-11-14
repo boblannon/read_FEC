@@ -26,13 +26,13 @@
 <div class="module">
 
     <div id="formdiv" class="clearfix">
-        <div class="form-row clearfix">
+        <div class="form-row clearfix quick-filter">
               <label>Quick Filters: </label>
               <div class="form_spacer">
-                  <a href="javascript:search_all();">All Today</a>&nbsp;|&nbsp;
-                  <a href="javascript:search_ies();">Independent Expenditures</a>&nbsp;|&nbsp;
-                  <a href="javascript:search_committees();">Candidate Committees</a>&nbsp;|&nbsp;
-                  <a href="javascript:search_superpacs();">Super PACs</a>&nbsp;|&nbsp;
+                  <a href="javascript:search_all();">All Today</a>&nbsp;
+                  <a href="javascript:search_ies();">Independent Expenditures</a>&nbsp;
+                  <a href="javascript:search_committees();">Candidate Committees</a>&nbsp;
+                  <a href="javascript:search_superpacs();">Super PACs</a>&nbsp;
                   <a href="javascript:search_party();">Party Committees</a>
               </div>
         </div>
@@ -41,7 +41,7 @@
 
             <div class="form_spacer">
                 <label>Candidate:</label>
-                <select data-placeholder="Pick a house candidate..." tabindex="2" name="candidate_id" id="candidate_id"  class="chosen-select" style="width: 304px;">
+                <select data-placeholder="Pick a house candidate..." tabindex="2" name="candidate_id" id="candidate_id"  class="chosen-select" style="width: 300px;">
                     <option value=''>Any Candidate</option>
                     {% for candidate in candidates %}
                     <option value='{{ candidate.fec_id}}'>{{ candidate.name }} {{ candidate.display_party}} {{ candidate.short_office }}</option>
@@ -49,10 +49,25 @@
                 </select>
             </div>
 
+             <div class="form_spacer">
+
+                  <label>Filing Type:</label>
+                  <select name="form_type" id="report_type"  class="chosen-select" style="width:300px;">
+                      <option value=''>All</option>
+                      <option value='monthly'>Monthly/quarterly reports</option>
+                      <option value='ies'>Independent/coordinated expenditures</option>
+                      <option value='F6'>48-hour notice of contributions/loans received</option>
+                      <option value='F9'>24-hour notice of electioneering communications</option>
+                      <option value='F2'>Statement of candidacy</option>
+                      <option value='F4'>Convention committee report</option>
+                      <option value='F13'>Inaugural committee report</option>
+
+                  </select>
+              </div>
 
             <div class="form_spacer">
                 <label>Amendments:</label>
-                <select name="is_superceded" class="chosen-select" id="is_superceded" style="width: 340px;">
+                <select name="is_superceded" class="chosen-select" id="is_superceded" style="width: 200px;">
                     <option value=''>All</option>
                     <option value='False'>only final versions</option>
                     <option value='True'>only amended originals</option>
@@ -65,15 +80,10 @@
         </div>
 
         <div class="form-row clearfix">
-            <div class="form_spacer">
-                <label>Committee:</label>
-                <input type="text"  id="search_term" name="search_term" class="text_field" style="width: 291px" ></input>
-
-            </div>
 
              <div class="form_spacer">
                   <label>Committee type:</label>
-                  <select name="committee_type" id="committee_class" class="chosen-select" style="width: 322px;" >
+                  <select name="committee_type" id="committee_class" class="chosen-select" style="width: 300px;" >
                       <option value=''>All</option>
                       <option value='H'>House</option>
                       <option value='S'>Senate</option>
@@ -89,13 +99,31 @@
                       <option value='C'>Communication Cost</option>
                   </select>
                 </div>
+
+
+                <div class="form_spacer">
+                    <label>Committee:</label>
+                    <input type="text"  id="search_term" name="search_term" class="text_field" style="width: 220px" ></input>
+
+                </div>
+
+
+                <div class="form_spacer">
+                    <label>Min. raised:</label>
+                    <input type="text" class="dollar_field" id="min_raised" name="min_raised" style="width: 120px;"></input>
+                </div>
+
+                <div class="form_spacer">
+                    <label>Min. cash on hand:</label>
+                    <input type="text" class="dollar_field" id="min_coh" name="min_coh" style="width: 120px;"></input>
+                </div>
         </div>
 
         <div class="form-row clearfix">
 
           <div class="form_spacer">
                 <label>Period:</label>
-                <select name="form_type" id="period_type" class="chosen-select" style="width: 326px;">
+                <select name="form_type" id="period_type" class="chosen-select" style="width: 300px;">
                     <option value=''>All</option>
                     <option value='Q1'>Quarterly: Q1</option>
                     <option value='Q2'>Quarterly: Q2</option>
@@ -120,7 +148,7 @@
 
             <div class="form_spacer">
                 <label>Year:</label>
-                <select name="year_covered" id="year_covered" class="chosen-select" style="width: 137px;">
+                <select name="year_covered" id="year_covered" class="chosen-select" style="width: 300px;">
                     <option value=''>All</option>
                     <option value='2013'>2013</option>
                     <option value='2012'>2012</option>
@@ -129,51 +157,19 @@
 
             <div class="form_spacer">
                 <label>Date filed:</label>
-                <select name="time_range" id="time_range" class="chosen-select" style="width: 155px;">
+                <select name="time_range" id="time_range" class="chosen-select" style="width: 200px;">
                   <option value='day'>today</option>
                   <option value='week'>last 7 days</option>
                   <option value='cycle'>entire cycle</option>
                 </select>
             </div>
-
-
-
-
-
         </div>
 
 
-        <div class="form-row clearfix">
-          <div class="form_spacer">
-
-              <label>Filing Type:</label>
-              <select name="form_type" id="report_type"  class="chosen-select" style="width:300px;">
-                  <option value=''>All</option>
-                  <option value='monthly'>Monthly/quarterly reports</option>
-                  <option value='ies'>Independent/coordinated expenditures</option>
-                  <option value='F6'>48-hour notice of contributions/loans received</option>
-                  <option value='F9'>24-hour notice of electioneering communications</option>
-                  <option value='F2'>Statement of candidacy</option>
-                  <option value='F4'>Convention committee report</option>
-                  <option value='F13'>Inaugural committee report</option>
-
-              </select>
-          </div>
-
-            <div class="form_spacer">
-                <label>Minimum raised:</label>
-                <input type="text" class="dollar_field" id="min_raised" name="min_raised" style="width: 60px;"></input>
-            </div>
-
-            <div class="form_spacer">
-                <label>Minimum cash on hand:</label>
-                <input type="text" class="dollar_field" id="min_coh" name="min_coh" style="width: 60px;"></input>
-            </div>
-        </div>
 
         <div class="form-row clearfix form-break">
 
-            <div class="form_spacer">
+            <div class="form_spacer one-line">
                 <label>Order by:</label>
                 <select name="order_field" class="chosen-select" id="ordering" style="width: 200px; margin-right: 30px;">
                     <option value='-filing_number'>newest-to-oldest</option>

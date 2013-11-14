@@ -22,12 +22,12 @@
 <div class="module">
 
    <div id="formdiv" class="clearfix">
-        <div class="form-row clearfix">
+        <div class="form-row clearfix quick-filter">
              <label>Quick Filters: </label>
              <div class="form_spacer">
-                 <a href="javascript:get_house();">House</a>&nbsp;|&nbsp;
-                 <a href="javascript:get_senate();">Senate</a>&nbsp;|&nbsp;
-                 <a href="javascript:get_superpacs();">Super PACs</a>&nbsp;|&nbsp;
+                 <a href="javascript:get_house();">House</a>&nbsp;
+                 <a href="javascript:get_senate();">Senate</a>&nbsp;
+                 <a href="javascript:get_superpacs();">Super PACs</a>&nbsp;
                  <a href="javascript:get_cmtes();">Party Committees</a>&nbsp;
              </div>
          </div>
@@ -36,7 +36,7 @@
         <div class="clearfix form-break form-row">
             <div class="form_spacer">
                 <label>Candidate or Committee name:</label>
-                <input type="text" id="search_term" name="search_term"  style="width: 222px;"></input>
+                <input type="text" id="search_term" name="search_term"  style="width: 180px;"></input>
             </div>
 
             <div class="form_spacer">
@@ -57,27 +57,25 @@
                     <option value='C'>Communication Cost</option>
                 </select>
             </div>
-        </div>
 
-        <div class="form-row clearfix">
             <div class="form_spacer">
-                <label>Minimum raised:</label>
-                <input type="text" class="dollar_field" id="min_raised" name="min_raised"></input>
+                <label>Min. raised:</label>
+                <input type="text" class="dollar_field" id="min_raised" name="min_raised" style="width: 100px;"></input>
             </div>
 
             <div class="form_spacer">
-                <label>Minimum spent:</label>
-                <input type="text" class="dollar_field" id="min_spent" name="min_spent"></input>
+                <label>Min. spent:</label>
+                <input type="text" class="dollar_field" id="min_spent" name="min_spent" style="width: 100px;"></input>
             </div>
 
             <div class="form_spacer">
-                <label>Minimum cash on hand:</label>
-                <input type="text" class="dollar_field" id="min_coh" name="min_coh"></input>
+                <label>Min. cash on hand:</label>
+                <input type="text" class="dollar_field" id="min_coh" name="min_coh" style="width: 100px;"></input>
             </div>
         </div>
 
         <div class="form-row clearfix form-break">
-            <div class="form_spacer">
+            <div class="form_spacer one-line">
                 <label>Order by:</label>
                 <select name="order_field" id="ordering"  class="chosen-select" style="width: 200px;"  >
                     <option value='-cash_on_hand'>cash on hand</option>
