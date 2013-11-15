@@ -119,15 +119,22 @@
     }
 
 /* Use colors, size from existing span.amount */
-.amount_description {
-    text-transform: uppercase;
-    font-size: 140%;
+p.amount_description {
+    padding-top: 10px;
+    border-top: 1px dashed #e5e5e5;
+    font-weight: bold;
+    margin-bottom: 10px;
     }
 
-.amount_dollars {
+p.last{
+    border-bottom: 1px dashed #e5e5e5;
+    padding-bottom: 10px;
+    }
+
+.amount_description span{
     font-color: #797070;
     text-transform: uppercase;
-    font-size: 140%;
+    font-weight: normal;
     }
 
 /* make tables more usable - the font should be a bit bigger and there should be greater visual distinction between columns cells.  */
@@ -420,6 +427,20 @@ th.sort.header:hover {
     padding-left: 20px;
     }
 
+.alert img{
+    float:left;
+}
+
+.alert p{
+    float: left;
+    width: 390px;
+    padding-left: 10px;
+}
+
+.alert p a{
+    font-weight: bold;
+}
+
 /*  more jf styles  */
 
 
@@ -473,7 +494,7 @@ A.link:hover {text-decoration: underline}
 
 .map_div {
     width: 410px;
-    border: 1px solid black;
+    border: 1px solid #e5e5e5;
     height:250px;
 }
 

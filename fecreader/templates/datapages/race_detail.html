@@ -20,91 +20,116 @@
 {% endblock %}
 
 {% block sitecss %}
-<link rel="stylesheet" href="{% static 'realtimefec/css/custom-theme/jquery-ui-1.10.3.custom.css' %}" /> 
+<link rel="stylesheet" href="{% static 'realtimefec/css/custom-theme/jquery-ui-1.10.3.custom.css' %}" />
 <link rel="stylesheet" href="{% static 'realtimefec/css/leaflet.css' %}" />
 {{ block.super }}
 {% endblock sitecss %}
-  
+
 {% block pagetitle %}{{ title }} {% endblock %}
 
  {% block rtmain %}
 
+<div class="module clearfix">
+    <div class="clearfix">
+        <div class="left_bar">
+            <p class="amount_description"><span>Incumbent:</span> {{race.incumbent_name}} ({{race.incumbent_party}})
+
+                {% if race.open_seat %}<br><strong>This is an open seat</strong>{% endif %}
+
+                {% if race.rothenberg_rating_text %}<br><a href="{{ race.get_rothenberg_link }}" class="link">Rothenberg Political Report</a> rates this seat: <strong>{{ race.rothenberg_rating_text}}</strong>{% endif %}
+            </p>
+
+            {% if race.district_notes %}<p><strong>Note:</strong> {{ race.district_notes|safe }}</p>
+            {% endif %}
+
+
+
+            <p class="amount_description">
+                <span>Total candidate fundraising:</span>&nbsp;{% if race.candidate_raised %}${{race.candidate_raised|intcomma}}{% else %}$0{% endif %}
+            </p>
+
+            <p class="amount_description">
+                <span>Total candidate spending:</span>&nbsp;{% if race.candidate_spending %}${{race.candidate_spending|intcomma}}{% else %}$0{% endif %}
+            </p>
+
+            <p class="amount_description">
+                <span>Total outside spending:</span>&nbsp;{% if race.outside_spending %}${{race.outside_spending|intcomma}}{% else %}$0{% endif %}
+            </p>
+
+            <p class="amount_description last">
+                <span>Candidate + outside spending:</span>&nbsp;{% if race.total_spending %}${{race.total_spending|intcomma}}{% else %}$0{% endif %}
+            </p>
+
+            <div class="alert">
+               <a class="link" href="javascript:submit_gotoscout_race('{{ race.get_feed_url }}');"><img src="../../public_views/static/css/images/alert.png" width="50" height="44" alt="Alert"></a>
+                <p><a class="link" href="javascript:submit_gotoscout_race('{{ race.get_feed_url }}');">Get automatic alerts</a> when a candidate files an electronic report, or is targeted by an independent expenditure.</p>
+            </div>
+
+
+        </div>
+
+        {% if race.display_map %}
+        <div class="right_bar clearfix">
+            <div id="toner-lite" class="map_div"></div>
+            <div class="map_attribution">Map tiles by <a href="http://stamen.com">Stamen Design</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>.</div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+
+<div class="overviewBar tipHeight" id="candidates">
+    <h4 class="insideBar module">Candidates</h4>
+</div>
+
+
 <div class="module">
-<div>
-<div class="left_bar">
-<p><b>Alerts: </b><a class="link" href="javascript:submit_gotoscout_race('{{ race.get_feed_url }}');">Get automatic alerts</a> whenever a candidate in this race files an electronic report, or is targeted by an independent expenditure</p>
-  
-<p><span class="amount_description">Total candidate fundraising:</span>&nbsp;<span class="amount_dollars">{% if race.candidate_raised %}${{race.candidate_raised|intcomma}}{% else %}$0{% endif %}</span>
-
-<br><span class="amount_description">Total candidate spending:</span>&nbsp;<span class="amount_dollars">{% if race.candidate_spending %}${{race.candidate_spending|intcomma}}{% else %}$0{% endif %}</span>  
-
-<br><span class="amount_description">Total outside spending:</span>&nbsp;<span class="amount_dollars">{% if race.outside_spending %}${{race.outside_spending|intcomma}}{% else %}$0{% endif %}</span>
-
-
-<br><span class="amount_description">Candidate + outside spending:</span>&nbsp;<span class="amount_dollars">{% if race.total_spending %}${{race.total_spending|intcomma}}{% else %}$0{% endif %}</span>
-</p>
-<p>Incumbent: {{race.incumbent_name}} ({{race.incumbent_party}})
-{% if race.open_seat %}<br><b>This is an open seat</b>{% endif %}
-{% if race.rothenberg_rating_text %}<br><a href="{{ race.get_rothenberg_link }}" class="link">Rothenberg Political Report</a> rates this seat: <b>{{ race.rothenberg_rating_text}}</b>{% endif %}
-</p>
-{% if race.district_notes %}<p><b>Note:</b> {{ race.district_notes|safe }}</p>
-{% endif %}
-
-</div>
-<div class="right_bar">
-{% if race.display_map %}
-<div id="toner-lite" class="map_div"></div>
-<div class="map_attribution">Map tiles by <a href="http://stamen.com">Stamen Design</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>.</div>
-{% endif %}
-</div>
-<div style="clear:both;">
-</div>
-
-
-
-
-<div class="overviewBar withNav withTip" id="candidates">
-    <h4>Candidates</h4>
-</div>
-<p>These are candidates who have filed paperwork to report fundraising with the Federal Elections Commission; they may not actually appear on the ballot. Only candidates who have reported raising at least $1,000, or who have been targeted by $1,000 or more in independent expenditures are shown.</p>
+    <div>
+        <p>These are candidates who have filed paperwork to report fundraising with the Federal Elections Commission; they may not actually appear on the ballot. Only candidates who have reported raising at least $1,000, or who have been targeted by $1,000 or more in independent expenditures are shown.</p>
 {% if candidates %}
-<table id="mainPageTable" class="sortable">
-      <thead>
-        <tr id="titles">
-            <th class="sort">Candidate (Party)</th>
-            <th class="sort">Incumbent</th>
-            <th class="sort">Cash on hand</th>
-            <th>Cash on hand date</th>
-            <th class="sort">Candidate Fundraising</th>
-            <th class="sort">Candidate Spending</th>
-            <th class="sort">Outside Spending For</th>
-            <th class="sort">Outside Spending Against</th>
-        </tr>
-      </thead>
-      <tbody>
-          {% for object in candidates %}    
-          <tr class="{% cycle 'odd' 'even' %}">
-              <td><a href="{{object.get_absolute_url}}">{{object.name}} ({{object.party}})</a>{% if object.not_seeking_reelection %}<a href="#notseekingreelection">*</a>{% endif %}</td>
-              <td class="incumbency">{{object.incumbency_status }}</td>
-              <td>${{ object.cash_on_hand|intcomma }}</td>
-              <td>{{ object.cash_on_hand_date|date:"n/j/y" }}</td>
-              <td>${{ object.total_receipts|intcomma }}</td>
-              <td>${{ object.total_disbursements|intcomma }}</td>
-              <td>{% if object.expenditures_supporting %}${{ object.expenditures_supporting|intcomma }}{% else %}$0{% endif %}</td>
-              <td>{% if object.expenditures_opposing %}${{ object.expenditures_opposing|intcomma }}{% else %}$0{% endif %}</td>
-              
-          </tr>
-          {% endfor %}
-        </tbody>
-</table>
+        <table id="mainPageTable" class="sortable">
+            <thead>
+                <tr id="titles">
+                    <th class="sort">Candidate (Party)</th>
+                    <th class="sort">Incumbent</th>
+                    <th class="sort">Cash on hand</th>
+                    <th>Cash on hand date</th>
+                    <th class="sort">Candidate Fundraising</th>
+                    <th class="sort">Candidate Spending</th>
+                    <th class="sort">Outside Spending For</th>
+                    <th class="sort">Outside Spending Against</th>
+                </tr>
+            </thead>
 
-
-{% if recent_filings %}
-<div class="overviewBar withNav withTip" id="recent_filings">
-    <h4>Most recent candidate committee filings</h4>
+            <tbody>
+                {% for object in candidates %}
+                <tr class="{% cycle 'odd' 'even' %}">
+                    <td><a href="{{object.get_absolute_url}}">{{object.name}} ({{object.party}})</a>{% if object.not_seeking_reelection %}<a href="#notseekingreelection">*</a>{% endif %}</td>
+                    <td class="incumbency">{{object.incumbency_status }}</td>
+                    <td>${{ object.cash_on_hand|intcomma }}</td>
+                    <td>{{ object.cash_on_hand_date|date:"n/j/y" }}</td>
+                    <td>${{ object.total_receipts|intcomma }}</td>
+                    <td>${{ object.total_disbursements|intcomma }}</td>
+                    <td>{% if object.expenditures_supporting %}${{ object.expenditures_supporting|intcomma }}{% else %}$0{% endif %}</td>
+                    <td>{% if object.expenditures_opposing %}${{ object.expenditures_opposing|intcomma }}{% else %}$0{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
-<p>Committee registration changes and filings superseded by amended reports are excluded.</p>
-<table id="mainPageTable" class="sortable">
+
+        {% if recent_filings %}
+<div class="overviewBar tipHeight" id="recent_filings">
+    <h4 class="insideBar module">Most recent candidate committee filings</h4>
+</div>
+
+
+<div class="module">
+    <div>
+        <p>Committee registration changes and filings superseded by amended reports are excluded.</p>
+        <table id="mainPageTable" class="sortable">
             <thead>
               <tr>
                 <th>Filing ID (Type)</th>
@@ -114,104 +139,117 @@
                 <th class="sort">Spent</th>
                 <th class="sort">Cash on hand</th>
 
-                
+
               </tr>
               </thead>
               <tbody>
-                  {% for object in recent_filings %}    
+                  {% for object in recent_filings %}
                       <tr class="{% cycle 'odd' 'even' %}">
                           <td>{% if object.filing_number %}<a class="link" href="{{object.get_absolute_url}}">{{ object.filing_number }} {{object.get_form_name}}</a>{% endif %} </td>
                           <td><a href="{{ object.get_committee_url}}">{{ object.committee_name }}</a></td>
-                          
-                          <td>{% if object.coverage_to_date %}{{ object.coverage_from_date|date:"n/j/y" }} - {{ object.coverage_to_date|date:"n/j/y" }}{% endif %}</td> 
+
+                          <td>{% if object.coverage_to_date %}{{ object.coverage_from_date|date:"n/j/y" }} - {{ object.coverage_to_date|date:"n/j/y" }}{% endif %}</td>
                           <td>{% if object.tot_raised %}{% if object.filing_number %}<a class="link" href="{{object.get_skeda_url}}">{% endif %}${{ object.tot_raised|intcomma }}</a>{% else %}$0{% endif %}</td>
                           <td>{% if object.tot_spent %}{% if object.filing_number %}<a class="link" href="{{object.get_spending_url}}">{% endif %}${{ object.tot_spent|intcomma }}{% if object.tot_spent %}</a>{% endif %}{% else %}$0{% endif %}</td>
                           <td>{% if object.coh_end %}${{ object.coh_end|intcomma }}{% else %}{% endif %}</td>
-                           
+
                         </tr>
                   {% endfor %}
-                  
-</tbody>
-</table>
-{% endif %}
 
+              </tbody>
+          </table>
+          {% endif %}
 
-{% if recent_ies %}
-<div class="overviewBar withNav withTip">
-    <h4>Recent Independent Expenditures</h4>
+      </div>
+  </div>
+
+          {% if recent_ies %}
+<div class="overviewBar tipHeight">
+    <h4 class="insideBar module">Recent Independent Expenditures</h4>
 </div>
-<p>The most recent independent expenditures of $5,000 or more targeting candidates in this race are listed below. <a href="{{race.get_filtered_ie_url}}">See all of this race's independent expenditures</a>.</p>
-
-<table id="mainPageTable" class="sortable">
-  <thead>
-    <tr>
-      <th class="sort">Committee</th>
-      <th class="sort">Candidate</th>
-      <th>Support<br>Oppose</th>
-      <th class="sort">Payee</th>
-      <th class="sort">Amount</th>
-      <th class="sort">Date</th>
-      <th class="sort">Purpose</th>
-    </tr>
-    </thead>
-    <tbody>
-      {% for object in recent_ies %}
-      <tr class="{% cycle 'odd' 'even' %}">
-        <td><a href="{{object.get_committee_url}}">{{ object.committee_name }}</a></td>
-        <td>{% if object.candidate_checked %}<a class="link" href="{{ object.get_candidate_url }}">{{ object.candidate_name_checked }}</a>{% else %}{{ object.candidate_name_raw }}{% endif %}</td>
-        <td>{{ object.support_oppose|safe}}</td>
-        <td>{{ object.payee_name_simplified }} - {{ object.payee_city}}, {{ object.payee_state}} {{ object.contributor_zip}} </td>
-        <td>${{ object.expenditure_amount|intcomma}}</td>
-        <td>{{ object.expenditure_date_formatted|date:"Y-m-d"}}</td>
-        <td>{% if object.expenditure_purpose_descrip %}{{ object.expenditure_purpose_descrip}}{% endif %}</td>
-      </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
-{% endif %}
 
 
+<div class="module">
+    <div>
+        <p>The most recent independent expenditures of $5,000 or more targeting candidates in this race are listed below. <a href="{{race.get_filtered_ie_url}}">See all of this race's independent expenditures</a>.</p>
 
-{% endif %}
+        <table id="mainPageTable" class="sortable">
+            <thead>
+                <tr>
+                    <th class="sort">Committee</th>
+                    <th class="sort">Candidate</th>
+                    <th>Support<br>Oppose</th>
+                    <th class="sort">Payee</th>
+                    <th class="sort">Amount</th>
+                    <th class="sort">Date</th>
+                    <th class="sort">Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for object in recent_ies %}
+                <tr class="{% cycle 'odd' 'even' %}">
+                    <td><a href="{{object.get_committee_url}}">{{ object.committee_name }}</a></td>
+                    <td>{% if object.candidate_checked %}<a class="link" href="{{ object.get_candidate_url }}">{{ object.candidate_name_checked }}</a>{% else %}{{ object.candidate_name_raw }}{% endif %}</td>
+                    <td>{{ object.support_oppose|safe}}</td>
+                    <td>{{ object.payee_name_simplified }} - {{ object.payee_city}}, {{ object.payee_state}} {{ object.contributor_zip}} </td>
+                    <td>${{ object.expenditure_amount|intcomma}}</td>
+                    <td>{{ object.expenditure_date_formatted|date:"Y-m-d"}}</td>
+                    <td>{% if object.expenditure_purpose_descrip %}{{ object.expenditure_purpose_descrip}}{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-{% if outside_spenders %}
-<div class="overviewBar withNav withTip">
-    <h4>Independent Expenditure Summary</h4>
+        {% endif %}
+
+
+
+        {% endif %}
+
+        {% if outside_spenders %}
+
+    </div>
 </div>
-<p>The amounts below are totals of all independent expenditures made for or against a candidate, regardless of amount. Only groups who have spent at least $1,000 on independent expenditures altogether are shown. For more, <a href="{{race.get_filtered_ie_url}}">see all independent expenditures made in this race</a>.</p>
 
-<table class="sortable">
-  <thead>
-    <tr>
-      <th class="sort">Committee</th>
-      <th class="sort">Candidate</th>
-      <th>Incumbent</th>
-      <th> Office Sought </th>
-      <th class="sort">Support / Oppose</th>
-      <th class="sort">Total outside spending</th>
-    </tr>
-    </thead>
-    <tbody>
-      {% for object in outside_spenders %}
-      <tr class="{% cycle 'odd' 'even' %}">
-        <td><a href="{{object.committee.get_absolute_url}}">{{object.committee.name}}</a></td>
-        <td><a href="{{object.candidate.get_absolute_url}}">{{object.candidate.name}} {{ object.candidate.display_party}}</a></td>
-        <td>{{ object.candidate.incumbency_status }}</td>
-        <td><a href="{{ object.candidate.district.get_absolute_url }}">{{ object.candidate.detailed_office }}</a></td>
-        <td>{{object.support_or_oppose|safe}}</td>
-        <td>${{object.total_ind_exp|intcomma}}</td>
-      </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
-{% endif %}
+<div class="overviewBar tipHeight">
+    <h4 class="insideBar module">Independent Expenditure Summary</h4>
+</div>
 
 
+    <div class="module">
+        <div>
 
+            <p>The amounts below are totals of all independent expenditures made for or against a candidate, regardless of amount. Only groups who have spent at least $1,000 on independent expenditures altogether are shown. For more, <a href="{{race.get_filtered_ie_url}}">see all independent expenditures made in this race</a>.</p>
 
+            <table class="sortable">
+                <thead>
+                    <tr>
+                        <th class="sort">Committee</th>
+                        <th class="sort">Candidate</th>
+                        <th>Incumbent</th>
+                        <th> Office Sought </th>
+                        <th class="sort">Support / Oppose</th>
+                        <th class="sort">Total outside spending</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for object in outside_spenders %}
+                    <tr class="{% cycle 'odd' 'even' %}">
+                        <td><a href="{{object.committee.get_absolute_url}}">{{object.committee.name}}</a></td>
+                        <td><a href="{{object.candidate.get_absolute_url}}">{{object.candidate.name}} {{ object.candidate.display_party}}</a></td>
+                        <td>{{ object.candidate.incumbency_status }}</td>
+                        <td><a href="{{ object.candidate.district.get_absolute_url }}">{{ object.candidate.detailed_office }}</a></td>
+                        <td>{{object.support_or_oppose|safe}}</td>
+                        <td>${{object.total_ind_exp|intcomma}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 
+            {% endif %}
+
+        </div>
+    </div>
 </div>
 
 
@@ -233,7 +271,7 @@
 			fillColor: '#922',
 		};
 	}
-  
+
   function initialize_map() {
         var layer = "toner-lite";
         map = new L.Map(layer, {
@@ -251,7 +289,7 @@
   		geojson_layer.bindPopup("{{ race.state}} District {{ race.district }}");
       map.fitBounds(geojson_layer.getBounds());
     }
-    
+
     $(document).ready(function(){
         initialize_map();
          $.getJSON("http://realtime.influenceexplorer.com/geojson/cd113_geojson/{{ race.get_district_fips}}.geojson", function(json){
