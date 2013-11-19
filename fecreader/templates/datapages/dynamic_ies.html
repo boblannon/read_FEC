@@ -233,33 +233,33 @@ function validate_fields() {
 function get_json_url() {
   query_string = "?ordering=" + $("#ordering").val();
 
-  min_spent = $("#min_spent").val();
+  var min_spent = $("#min_spent").val();
   if (min_spent.length > 0) {
     query_string += "&min_spent=" + min_spent
   }
 
-  state_select = $("#candidate_state_checked").val();
+  var state_select = $("#candidate_state_checked").val();
   if (state_select.length > 0) {
     if (state_select != '0') {
       query_string += "&candidate_state_checked=" + state_select
     }
   }
 
-  race_select = $("#district_checked").val();
+  var race_select = $("#district_checked").val();
   if (race_select.length > 0) {
     if (race_select != '0') {
       query_string += "&district_checked=" + race_select
     }
   }
 
-  candidate_select = $("#candidate_id_checked").val();
+  var candidate_select = $("#candidate_id_checked").val();
   if (candidate_select.length > 0) {
     if (candidate_select != '0') {
       query_string += "&candidate_id_checked=" + candidate_select
     }
   }
 
-  support_select = $("#support_oppose_checked").val();
+  var support_select = $("#support_oppose_checked").val();
   if (support_select.length > 0) {
     if (support_select != '0') {
       query_string += "&support_oppose_checked=" + support_select
@@ -268,7 +268,7 @@ function get_json_url() {
 
 
 
-  committee_select = $("#filer_committee_id_number").val();
+  var committee_select = $("#filer_committee_id_number").val();
   if (committee_select.length > 0) {
     if (committee_select != '0') {
       query_string += "&filer_committee_id_number=" + committee_select
@@ -279,7 +279,7 @@ function get_json_url() {
   window.location.hash = query_string;
 
   url = "/api/independent-expenditures/" + query_string
-  console.log("url is: " + url);
+  //console.log("url is: " + url);
   return url;
 
 
@@ -333,7 +333,7 @@ function remove_tablesorter() {
   // see http://stackoverflow.com/questions/8171530/remove-jquery-tablesorter-from-table/8177869#8177869
   // if we don't remove and add it back the sort stops working in an odd, quiet way. (on FF, for instance, the first sort of a column works, but subsequent ones don't)
 
-  console.log("trying to remove tablesorter");
+  //console.log("trying to remove tablesorter");
 
   $('.sortable')
    .unbind('appendCache applyWidgetId applyWidgets sorton update updateCell')
@@ -361,7 +361,7 @@ function load_previous(jsonurl) {
 }
 
 function loadjson(jsonurl) {
-  console.log("loading json: " + jsonurl);
+  //console.log("loading json: " + jsonurl);
   //jsonurl = "/api/new_filing/";
   $.getJSON(jsonurl, function(data_loaded) {
 
@@ -420,7 +420,7 @@ function loadjson(jsonurl) {
                    var page_re = /&*page=\d+/i;
                    var format_re = /&*format=json/i;
                    var csvurl = jsonurl.replace(page_re, '').replace(format_re, '') + "&format=csv";
-                   console.log("csv url is: " + csvurl);
+                   //console.log("csv url is: " + csvurl);
                    csv_string = ' Download a <a href="' + csvurl + '">csv file of all '+ roundwCommas(data_loaded.count) +' results</a>.';
                    $( "#csv_info" ).html(csv_string);
 
@@ -491,12 +491,12 @@ $(document).ready(function() {
 
 
     $("#district_checked").chosen().change( function() {
-      console.log('race_chosen: ' + $("#district_checked").val());
+      //console.log('race_chosen: ' + $("#district_checked").val());
       reset_candidates($("#candidate_state_checked").val(), $("#district_checked").val());
     });
 
     $("#candidate_state_checked").chosen().change( function() {
-      console.log('state_chosen: ' + $("#candidate_state_checked").val());
+      //console.log('state_chosen: ' + $("#candidate_state_checked").val());
       reset_candidates($("#candidate_state_checked").val(), 0);
       reset_races($("#candidate_state_checked").val());
     });
@@ -525,7 +525,7 @@ min_spent
 
    $.each(windowhash.substr(2).split('&'), function(i, elem) {
       var parts = elem.split('=');
-      console.log("hashdict parts0 " + parts[0] + " parts 1: " + parts[1]);
+      //console.log("hashdict parts0 " + parts[0] + " parts 1: " + parts[1]);
       $("#" + parts[0]).val(parts[1]);
 
 
@@ -539,8 +539,7 @@ min_spent
    $("#filer_committee_id_number").trigger("chosen:updated");
    $("#ordering").trigger("chosen:updated");
 
-   console.log("hashdict is " + hashdict);
-
+   //console.log("hashdict is " + hashdict);
    button_load();
 
 });
