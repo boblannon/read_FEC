@@ -4,14 +4,15 @@
 {% load staticfiles %}
 
 {% block sitejs %}
-{# <script type="text/javascript" src="{% static 'realtimefec/js/jquery-ui-1.10.3.custom.min.js' %}"></script> #}
+<script type="text/javascript" src="{% static 'realtimefec/js/handlebars.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'realtimefec/js/jquery-ui-1.10.3.custom.min.js' %}"></script>
 
 {% endblock %}
 
 {% block sitecss %}
 {{ block.super }}
-{# <link rel="stylesheet" href="{% static 'realtimefec/css/chosen.min.css' %}" /> #}
-
+<link rel="stylesheet" href="{% static 'realtimefec/css/chosen.min.css' %}" />
 {% endblock sitecss %}
 
 {% block body_class %}{% endblock %}
@@ -123,6 +124,8 @@
 </div>
 
 </div>
+<script type="text/javascript" src="{% static 'realtimefec/js/chosen.jquery.min.js' %}"></script>
+
 {% verbatim %}
 <script id="committeerow-template" type="text/x-handlebars-template" >
 // http://localhost:8000/filings/882072/SA/
@@ -429,6 +432,8 @@ function addMustacheHelpers() {
 
 $(document).ready(function() {
     addMustacheHelpers();
+    $('.chosen-select'  ).chosen({disable_search_threshold: 15});
+
 
     $( "#load_button" )
       .bind( "click", function() {
