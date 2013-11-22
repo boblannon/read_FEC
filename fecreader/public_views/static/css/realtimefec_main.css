@@ -326,23 +326,7 @@ th.sort.header:hover {
     }
 
 
-.pagination_container {
-    padding-top:0px;
-    padding-bottom:0px;
-    width: 100%;
-    }
 
-.load_next {
-    float: right;
-    width: 200px;
-    text-align: right;
-}
-
-.load_previous {
-    float: left;
-    width: 200px;
-    z-index:100;
-}
 
 #display_info {
     font-family: Georgia,Serif;
@@ -423,9 +407,42 @@ th.sort.header:hover {
     background: url(http://s3.amazonaws.com/sunlight-assets/site/4.0/images/btn_getAlert.png) left bottom no-repeat;
     }
 
+.pagination_container {
+    padding-top:0px;
+    padding-bottom:0px;
+    width: 100%;
+    clear:both;
+    }
+
+.load_next {
+    float: right;
+    width: 200px;
+    text-align: right;
+}
+
+.load_previous {
+    float: left;
+    width: 200px;
+    z-index:100;
+}
+
 #alertSettings {
     padding-left: 20px;
     }
+
+
+.download img{
+    float: right;
+}
+
+.download p{
+    float: right;
+    padding-right: 10px;
+}
+
+a.download {
+    float: right;
+}
 
 .alert img{
     float:left;
@@ -441,6 +458,10 @@ th.sort.header:hover {
     font-weight: bold;
 }
 
+p.results {
+    font-size: 16px;
+    float:left;
+}
 /*  more jf styles  */
 
 

@@ -185,12 +185,16 @@
     </div>
 
 
-    <span>Total of 2 results found. Showing 1-2.</span>
-    <span class="tip">Download a csv file of all 2 results.</span>
-<img src="{% static 'realtimefec/css/images/alert-ro.png' %}" width="50" height="44" alt="Alert Ro">
+    <p class="results"><strong>2</strong> results found. Showing <strong>1-2</strong>.</p>
+
+    <a class="download" href="#">
+        <img class="download" src="{% static 'realtimefec/css/images/download.svg' %}" width="25" height="22" alt="download">
+        <p class="tip download"><strong>Download</strong> a csv file of all 2 results.</p>
+    </a>
 
 
-    <span id="display_info"></span><span id="csv_info" class="tip"></span>
+
+    <!-- <span id="display_info"></span><span id="csv_info" class="tip"></span>  -->
 
     <div class="pagination_container">
         <div class="load_next"></div>
@@ -470,14 +474,14 @@ function loadjson(jsonurl) {
 
 
                if (next != null) {
-                 $( ".load_next" ).html( "<a href=\"javascript:load_next('" + next + "');\">next page<\/a>");
+                 $( ".load_next" ).html( "<a href=\"javascript:load_next('" + next + "');\">Next Page &#8674;<\/a>");
                } else {
                  $( ".load_next" ).html("");
                }
 
 
                if (previous != null) {
-                 $( ".load_previous" ).html( "<a href=\"javascript:load_previous('" + previous + "');\">previous page<\/a>");
+                 $( ".load_previous" ).html( "<a href=\"javascript:load_previous('" + previous + "');\">&#8672; Previous Page<\/a>");
                } else {
                  $( ".load_previous" ).html("");
                }
