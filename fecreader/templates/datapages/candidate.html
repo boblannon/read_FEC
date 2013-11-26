@@ -41,7 +41,7 @@
 
 
   {% if candidate.is_electronic_filer %}
-  <p><strong>Downloadable files: </strong><a class="link" href="javascript:download_candidate_data('{{ candidate.fec_id }}','A', '{{ candidate.name|escapejs }}', '{{candidate.detailed_office }}');">Contributions</a>&nbsp;|&nbsp;<a class="link" href="javascript:download_candidate_data('{{ candidate.fec_id }}','B', '{{ candidate.name|escapejs }}', '{{candidate.detailed_office }}');">Disbursements</a>
+  <p class="downloadable-files"><strong>Downloadable files: </strong><a class="link" href="javascript:download_candidate_data('{{ candidate.fec_id }}','A', '{{ candidate.name|escapejs }}', '{{candidate.detailed_office }}');">Contributions</a>&nbsp;|&nbsp;<a class="link" href="javascript:download_candidate_data('{{ candidate.fec_id }}','B', '{{ candidate.name|escapejs }}', '{{candidate.detailed_office }}');">Disbursements</a>
   </p>
   <div class="alerts">
       <p>
@@ -49,7 +49,7 @@
       </p>
   </div>
 {% endif %}
-</div>
+
 
 
 {% if recent_ies %}
