@@ -42,11 +42,34 @@
     <p class="amount_description"><a href="{{committee.fec_all_filings}}">See filings</a> on the FEC's web site.</p>
 
 
-  {% if committee.is_electronic_filer %}<strong>Downloadable files: </strong><a class="link" href="javascript:download_committee_data('{{ committee.fec_id }}','A', '{{ committee.name|escapejs }}');">Contributions</a>&nbsp;|&nbsp;<a class="link" href="javascript:download_committee_data('{{ committee.fec_id }}','B', '{{ committee.name|escapejs }}');">Disbursements</a>{% if independent_spending %}
-  &nbsp;|&nbsp;<a class="link" href="javascript:download_committee_data('{{ committee.fec_id }}','E', '{{ committee.name }}');">Independent Expenditures</a>{% endif %}
-    <div class="alert">
-      <a class="link" href="javascript:submit_gotoscout('{{ committee.fec_id }}');">Get automatic alerts</a> when this committee files new campaign finance reports.</div>
-  {% endif %}
+  {% if committee.is_electronic_filer %}
+
+  <div class="scoutblock clearfix">
+
+
+      <div class="alert clearfix">
+          <a href="javascript:submit_gotoscout('{{ committee.fec_id }}');" id='gotoscout'>Get alerts with Scout</a>
+          <p> when this committee files <strong>new campaign finance reports.</strong></p>
+          <p class="tip">To get alerts, you  will be sent to <a href="https://scout.sunlightfoundation.com/">Scout</a>, Sunlight Foundations's notification tool. If you don't have an account with Scout you'll be prompted to create one.</p>
+
+            {% endif %}
+      </div>
+
+
+
+        <div class="downloads clearfix">
+            <h5>Downloadable files: </h5>
+            <a class="link" href="javascript:download_committee_data('{{ committee.fec_id }}','A', '{{ committee.name|escapejs }}');">Contributions</a>&nbsp;|&nbsp;<a class="link" href="javascript:download_committee_data('{{ committee.fec_id }}','B', '{{ committee.name|escapejs }}');">Disbursements</a>{% if independent_spending %}
+  &nbsp;|&nbsp;
+            <a class="link" href="javascript:download_committee_data('{{ committee.fec_id }}','E', '{{ committee.name }}');">Independent Expenditures</a>
+            <p class="tip">Download a .csv file of itemized contributions. You can find data dictionaries and more in the data dictionaries section of the about page.
+            Some files may be quite large.
+            </p>
+                    {% endif %}
+        </div>
+
+    </div>
+
 </div>
 
 
@@ -87,9 +110,9 @@
 
 
     {% if recent_ies %}
-    
-    
-    
+
+
+
     <div class="overviewBar tipHeight" >
         <h4 class="insideBar module">Recent Independent Expenditures</h4>
     </div>
@@ -132,14 +155,14 @@
 {% if recent_report_list %}
 
 
-    
+
 <div class="overviewBar tipHeight" >
     <h4 class="insideBar module">Recent 24- and 48-hour filings</h4>
 </div>
 
 
 <div class="module clearfix">
-    
+
 
 <p>Only filings made since the last monthly/quarterly report are shown</p>
 
