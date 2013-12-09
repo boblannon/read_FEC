@@ -302,10 +302,6 @@ th.sort.header:hover {
     line-height: 24px;
     }
 
-.chosen-single:hover{
-    color:#00FF00;
-    background-color: #00FF00;
-}
 
 .dollar_field {
     width:105px;
@@ -339,12 +335,42 @@ th.sort.header:hover {
     }
 
 
-/* subscribe form */
+/* subscribe form  ALERT PAGE*/
+.alertsearch {
+    height: 40px;
+    float: left;
+    margin-right: 10px;
+}
+
 #form_filings {
     float: left;
     width: 500px;
     margin-right: 25px;
+    margin-top: 30px;
+    min-height: 400px;
     }
+
+#search_results h4 {
+    display: none;
+}
+
+#search_results p {
+    font-weight: bold;
+    font-size: 16px;
+    padding-top: 10px;
+}
+
+#search_results ul {
+    padding-left: 0px;
+}
+
+#search_results ul li {
+    margin-bottom: 10px;
+}
+
+#selected_committees {
+    padding: 0;
+}
 
 .subscribe_to_committee {
     display: block;
@@ -356,6 +382,7 @@ th.sort.header:hover {
     height: 14px;
     padding-bottom: 3px;
     margin-top: 2px;
+    clear: both;
     }
 
 .subscribe_to_committee:hover {
@@ -385,27 +412,70 @@ th.sort.header:hover {
 #alertSet {
     float: right;
     width: 272px;
-    margin-right: 25px;
+    margin-right: 10px;
     background-color: #fafaf8; -moz-border-radius: 3px; -webkit-border-radius: 3px;
     padding: 15px;
+        margin-top: 15px;
     }
+
+
+#alertSet ul li {
+    margin-bottom: 10px;
+}
+
+#alertSettings h6 {
+    padding-bottom: 10px;
+}
+
+#alertSettings ul li label {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
 
 .module {
     margin-bottom: 30px;
     }
 
 #gotoscout {
-    background: url(http://s3.amazonaws.com/sunlight-assets/site/4.0/images/btn_getAlert.png) left top no-repeat;
-    display: block;
-    text-indent: -9999em;
-    width: 118px;
-    height: 39px;
-    margin-top: 20px;
+    background: #d2ba00; /* Old browsers */
+    background: -moz-linear-gradient(-45deg,  #d2ba00 0%, #e3d03a 22%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#d2ba00), color-stop(22%,#e3d03a)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(-45deg,  #d2ba00 0%,#e3d03a 22%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(-45deg,  #d2ba00 0%,#e3d03a 22%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(-45deg,  #d2ba00 0%,#e3d03a 22%); /* IE10+ */
+    background: linear-gradient(135deg,  #d2ba00 0%,#e3d03a 22%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d2ba00', endColorstr='#e3d03a',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+    display: inline-block;
+    margin-bottom: 10px;
+    color: #FFF;
+    font-weight: normal;
+    font-size: 18px;
+    font-family: georgia, serif;
+    font-style: italic;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+
+    letter-spacing: 1px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid #BCA700;
     }
 
 #gotoscout:hover {
-    background: url(http://s3.amazonaws.com/sunlight-assets/site/4.0/images/btn_getAlert.png) left bottom no-repeat;
+    background:#D2BA00;
     }
+
+.scoutblock {
+    clear: both;
+    background: #DDE9E8;
+    padding: 15px;
+    margin-top: 10px;
+}
 
 .pagination_container {
     padding-top:0px;
@@ -426,9 +496,6 @@ th.sort.header:hover {
     z-index:100;
 }
 
-#alertSettings {
-    padding-left: 20px;
-    }
 
 
 .download img{
@@ -441,6 +508,17 @@ th.sort.header:hover {
 }
 
 a.download {
+    float: right;
+}
+
+
+
+.downloadable-files p{
+    float: right;
+    padding-right: 10px;
+}
+
+a.downloadable-files {
     float: right;
 }
 

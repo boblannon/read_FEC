@@ -5,14 +5,13 @@
 
 
 {% block sitecss %}
-<link rel="stylesheet" href="{% static 'realtimefec/css/custom-theme/jquery-ui-1.10.3.custom.css' %}" /> 
-
+<link rel="stylesheet" href="{% static 'realtimefec/css/custom-theme/jquery-ui-1.10.3.custom.css' %}" />
 {{ block.super }}
 {% endblock sitecss %}
 
 {% block sitejs %}
 <script type="text/javascript" src="{% static 'realtimefec/js/handlebars.js' %}"></script>
-<script type="text/javascript" src="{% static 'realtimefec/js/jquery-ui-1.10.3.custom.min.js' %}"></script> 
+<script type="text/javascript" src="{% static 'realtimefec/js/jquery-ui-1.10.3.custom.min.js' %}"></script>
 
 {% endblock %}
 
@@ -26,32 +25,36 @@
 
 <div class="module">
     <h4>Get notified about new campaign finance reports</h4>
-    <div class="amountLine clear">
+    <div class="amountLine clearfix">
         <p>Sunlight’s Real-Time FEC allows users to receive an email alert any time a particular committee you're interested in files a new electronic report with the Federal Election Commission. Notifications are available for all committees that file with the FEC, not just super PACs. (Remember, Senate candidates are not required to file electronically.)
         </p>
 
         <p>Notifications are provided through <a href="http://scout.sunlightfoundation.com/">Scout</a>, the Sunlight Foundation's search and alert tool covering state and federal legislation, the Congressional Record and federal regulations. Realtime federal campaign finance users may also be interested in our <a href="https://scout.sunlightfoundation.com/user/sunlight_collection/campaign-finance">campaign finance</a> collection on Scout.
-          
-          <p>Contact <a href="mailto:jfenton@sunlightfoundation.com">jfenton@sunlightfoundation.com</a> with any questions.</p>
+
+          <p><em>Contact <a href="mailto:jfenton@sunlightfoundation.com">jfenton@sunlightfoundation.com</a> with any questions.</em></p>
     </div>
 
-    <div id="form_filings">
-        <h4>Choose Committees to Follow</h4>
-        <input type="text" id="searchbox" value="Committee or candidate" style="width: 200px;"  />
-        <button class="searchBtn" type="submit" id="search_committees">
+    <div id="form_filings" class="clearfix">
+        <h3>Choose Committees to Follow</h3>
+        <form>
+            <input type="text" id="searchbox" class="alertsearch" value="Committee or candidate" style="width: 400px;"  />
+            <button class="searchBtn" type="submit" id="search_committees">
+        </form>
+
+
             <span>Search!</span>
         </button>
         <div id="search_results" class="clearfix"></div>
     </div>
 
-    <div id="alertSet">
-        <h4>Set Your Alert</h4>
+    <div id="alertSet" class="clearfix">
+        <h3>Set Your Alert</h3>
         <div id="alertSettings" class="clearfix">
             <div id="selected_committees" class="module"></div>
             <div id="filing_types" class="filing_radio clearfix" style="display:none;">
                 <h6>Get notified about which filings?</h6>
                 <ul class="form_check">
-                    <li style="margin-bottom: 5px;">
+                    <li>
                         <label>
                             <input class="filing_check checkbox" type="checkbox" name="word" id="monthly" />
                             Monthly/quarterly reports<br>(Includes pre-election reports)
@@ -71,7 +74,9 @@
                     </li>
                 </ul>
 
-            <div style="clear:both;"><a href='' id='gotoscout'>Get alerts</a></div>    
+            <div class="scoutblock"><a href='' id='gotoscout'>Get alerts with Scout</a>
+                <p class="withTip">To get alerts, you  will be sent to <a href="https://scout.sunlightfoundation.com/">Scout</a>, Sunlight Foundations's notification tool.
+                     If you don't have an account with Scout you'll be prompted to create one.</p></div>
             </div>
         </div>
     </div>
@@ -100,7 +105,7 @@ function open_error_dialogue(body_message) {
 
 
 function get_amendment_list(form, include_new, include_amended) {
-  
+
 	var results = [];
 	var needshyphen = false;
 	if (include_new) {
@@ -159,7 +164,7 @@ function get_feed_url() {
 	}
 
 	if (needs_hyphen==false) {
-		open_error_dialogue("You haven't picked any forms. Please pick some forms and then submit."); 
+		open_error_dialogue("You haven't picked any forms. Please pick some forms and then submit.");
 		return false;
 	}
 	feedurl += "forms/" + form_list + "/";
@@ -222,8 +227,8 @@ function remove_from_selections(this_fecid) {
 function submit_add_to_array(this_fecid, this_name) {
 
 	if (selected_committees.length == 10) {
-		open_error_dialogue("No more than 10 committees can be selected."); 
-		
+		open_error_dialogue("No more than 10 committees can be selected.");
+
 		return;
 	}
 
@@ -258,7 +263,7 @@ function submit_goto_scout() {
 
 $(document).ready(function () {
   $( "#confirm_button" ).button();
-	
+
   $( "#confirm" ).dialog({
 		autoOpen: false,
 		width: 400,
@@ -267,7 +272,7 @@ $(document).ready(function () {
   			text: "Ok",
   			click: function() {
   			  console.log("goto scout executed")
-    	    
+
   				submit_goto_scout();
   			}
   		},
@@ -275,7 +280,7 @@ $(document).ready(function () {
   			text: "Cancel",
   			click: function() {
   			  console.log("dialogue closed")
-  			  
+
   				$( this ).dialog( "close" );
   			}
   		}
@@ -299,7 +304,7 @@ $(document).ready(function () {
 			$( "#confirm" ).dialog( "open" );
 			return false;
 	  });
-	    
+
 
 	$("#searchbox").focus(function () {
 
