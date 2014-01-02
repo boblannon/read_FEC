@@ -185,11 +185,11 @@
     </div>
 
 
-    <p class="results"><strong>2</strong> results found. Showing <strong>1-2</strong>.</p>
+    <p class="results" id="results_info"></p>
 
-    <a class="download" href="#">
+    <a class="download" href="#" id="download_block">
         <img class="download" src="{% static 'realtimefec/css/images/download.svg' %}" width="25" height="22" alt="download">
-        <p class="tip download"><strong>Download</strong> a csv file of all 2 results.</p>
+        <p class="tip download" id="download_info"></p>
     </a>
 
 
@@ -336,56 +336,57 @@ function get_json_url() {
   window.location.hash = query_string;
 
   url = "/api/new_filing/" + query_string
-  //console.log("url is: " + url);
   return url;
 
 
 }
 
 function reset_all_fields() {
-  $(".date_field,  .dollar_field, .dropdown_field, .dropdown_super_narrow, .dropdown_field_narrow").each(function( index ) {
-    $(this).val("");
+  $(".dollar_field, .chosen-select").each(function( index ) {
+    $(this).val("").trigger("chosen:updated");
   });
   // default is filing order
-  $("#ordering").val('-filing_number');
-  $("#time_range").val('cycle');
+  $("#ordering").val('-filing_number').trigger("chosen:updated");
+  $("#time_range").val('cycle').trigger("chosen:updated");  
+  
 }
 
 function search_all() {
   reset_all_fields();
-  $("#time_range").val('day');
+  $("#time_range").val('day').trigger("chosen:updated");
   button_load();
+  
 
 }
 
 function search_ies() {
   reset_all_fields();
-  $("#report_type").val('ies');
+  $("#report_type").val('ies').trigger("chosen:updated");
   button_load();
 
 }
 
 function search_committees() {
   reset_all_fields();
-  $("#committee_class").val('HSP');
+  $("#committee_class").val('HSP').trigger("chosen:updated");
   button_load();
 }
 
 function search_party() {
   reset_all_fields();
-  $("#committee_class").val('XYZ');
+  $("#committee_class").val('XYZ').trigger("chosen:updated");
   button_load();
 }
 
 function search_f2s() {
   reset_all_fields();
-  $("#report_type").val('F2');
+  $("#report_type").val('F2').trigger("chosen:updated");
   button_load();
 }
 
 function search_superpacs() {
   reset_all_fields();
-  $("#committee_class").val('UOVW');
+  $("#committee_class").val('UOVW').trigger("chosen:updated");
   button_load();
 }
 // Some template functions. Should eventually live somewhere else.
@@ -425,7 +426,6 @@ function remove_tablesorter() {
   // see http://stackoverflow.com/questions/8171530/remove-jquery-tablesorter-from-table/8177869#8177869
   // if we don't remove and add it back the sort stops working in an odd, quiet way. (on FF, for instance, the first sort of a column works, but subsequent ones don't)
 
-  //console.log("trying to remove tablesorter");
 
   $('.sortable')
    .unbind('appendCache applyWidgetId applyWidgets sorton update updateCell')
@@ -453,8 +453,7 @@ function load_previous(jsonurl) {
 }
 
 function loadjson(jsonurl) {
-  //console.log("loading json");
-  //jsonurl = "/api/new_filing/";
+
   $.getJSON(jsonurl, function(data_loaded) {
 
                var source   = $("#row-template").html();
@@ -464,10 +463,16 @@ function loadjson(jsonurl) {
                numresults = results.length;
                first_result = 100*(pagenumber-1)+1;
                last_result = 100*(pagenumber-1) + numresults;
+               result_size = roundwCommas(data_loaded.count);
+               
+               
+               result_string = "<strong>" + result_size + "</strong> results found. ";
+               if (last_result > 0) { 
+                 result_string += "Showing <strong>" + first_result + "-" + last_result + "</strong>."
+               };
+               $( "#results_info" ).html(result_string);
 
-               result_string = "Total of " + roundwCommas(data_loaded.count) + " results found. Showing " + first_result + "-" + last_result + ".";
-               $( "#display_info" ).html(result_string);
-
+               
                next =  data_loaded.next;
                previous = data_loaded.previous;
 
@@ -486,11 +491,8 @@ function loadjson(jsonurl) {
                  $( ".load_previous" ).html("");
                }
 
-
-               //console.log("count is: " + data_loaded.count + " num results: " + numresults);
                first_result = 100*(pagenumber-1)+1;
                last_result = 100*(pagenumber-1) + numresults;
-
 
                resultrows = []
                for (var i=0;i<results.length;i++) {
@@ -511,38 +513,25 @@ function loadjson(jsonurl) {
                // addCommaParser()
                $(".sortable").tablesorter({ widgets: ['zebra']});
 
-               if (data_loaded.count <  2000) {
+               if (data_loaded.count <  2000 && data_loaded.count >  0) {
                   var page_re = /&*page=\d+/i;
                   var format_re = /&*format=json/i;
                   var csvurl = jsonurl.replace(page_re, '').replace(format_re, '') + "&format=csv";
-                  //console.log("csv url is: " + csvurl);
-                  csv_string = ' Download a <a href="' + csvurl + '">csv file of all ' + roundwCommas(data_loaded.count)  + ' results</a>.';
-                  $( "#csv_info" ).html(csv_string);
+                  download_info = ' <strong>Download</strong> a csv file of all ' + roundwCommas(data_loaded.count)  + ' results.';
+                  $( "#download_info" ).html(download_info);
+                  $( "#download_block" ).attr("href", csvurl);
+                  $( "#download_block" ).show();
 
                } else {
-                 $( "#csv_info" ).html("");
+                 $( "#download_info" ).html("");
+                 $( "#download_block" ).hide();
+                 
                }
 
             });
 
 }
 
-/* prob not needed.
-
-function addCommaParser() {
-  $.tablesorter.addParser({
-    id: 'nocomma',
-    is: function(s) {
-      // return false so this parser is not auto detected
-      return false;
-    },
-    format: function(s) {
-      return s.replace(/,/,'');
-    },
-    type: 'numeric'
-  });
-}
-*/
 function addMustacheHelpers() {
 
   Handlebars.registerHelper('addcommas', function(object) {
@@ -566,7 +555,7 @@ function addMustacheHelpers() {
 $(document).ready(function() {
 
 
-    $('.chosen-select'  ).chosen({disable_search_threshold: 15});
+    $('.chosen-select'  ).chosen({disable_search_threshold: 20});
 
     addMustacheHelpers();
 
@@ -588,10 +577,12 @@ $(document).ready(function() {
 
    $.each(windowhash.substr(2).split('&'), function(i, elem) {
       var parts = elem.split('=');
-      //console.log("hashdict parts0 " + parts[0] + " parts 1: " + parts[1]);
       $("#" + parts[0]).val(parts[1]);
    });
-
+   
+   $(".dollar_field, .chosen-select").each(function( index ) {
+     $(this).trigger("chosen:updated");
+   });
    button_load();
 
 });
