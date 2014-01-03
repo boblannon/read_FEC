@@ -342,7 +342,7 @@ function get_json_url() {
 }
 
 function reset_all_fields() {
-  $(".dollar_field, .chosen-select").each(function( index ) {
+  $(".dollar_field, .chosen-select, #search_term").each(function( index ) {
     $(this).val("").trigger("chosen:updated");
   });
   // default is filing order

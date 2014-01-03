@@ -271,7 +271,6 @@ $(document).ready(function () {
   		{
   			text: "Ok",
   			click: function() {
-  			  console.log("goto scout executed")
 
   				submit_goto_scout();
   			}
@@ -279,8 +278,6 @@ $(document).ready(function () {
   		{
   			text: "Cancel",
   			click: function() {
-  			  console.log("dialogue closed")
-
   				$( this ).dialog( "close" );
   			}
   		}
@@ -301,7 +298,9 @@ $(document).ready(function () {
 	});
 
 	$('#gotoscout').click(function() {
-			$( "#confirm" ).dialog( "open" );
+			
+			//$( "#confirm" ).dialog( "open" );
+			submit_goto_scout();
 			return false;
 	  });
 

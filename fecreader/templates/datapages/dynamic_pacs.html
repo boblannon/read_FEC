@@ -93,12 +93,19 @@
 
 
 <div>
-<!-- <div id="result_description"><b></b></div> -->
-<span id="display_info"></span><span id="csv_info" class="tip"></span>
-<div class="load_next" style="float: right; width: 200px;"></div>
-<div class="load_previous" style="float: left; width: 200px; z-index:100;"></div>
-<div style="clear:both;"></div>
+
+<p class="results" id="results_info"></p>
+<a class="download" href="#" id="download_block">
+    <img class="download" src="{% static 'realtimefec/css/images/download.svg' %}" width="25" height="22" alt="download">
+    <p class="tip download" id="download_info"></p>
+</a>
+
+
+<div class="pagination_container">
+    <div class="load_next"></div>
+    <div class="load_previous" ></div>
 </div>
+
 
 <table id="mainPageTable" class="sortable">
             <thead>
@@ -118,8 +125,8 @@
 </tbody>
 </table>
 <div>
-<div class="load_next" style="float: right; width: 200px;"></div>
-<div class="load_previous" style="float: left; width: 200px;"></div>
+<div class="load_next"></div>
+<div class="load_previous"></div>
 <div style="clear:both;"></div>
 </div>
 
@@ -229,11 +236,17 @@ function get_json_url() {
 }
 
 function reset_all_fields() {
-  $(".date_field,  .dollar_field, .dropdown_field, .text_field").each(function( index ) {
+  $(".date_field,  .dollar_field, .dropdown_field, .text_field, #search_term").each(function( index ) {
     $(this).val("");
   });
   // default is filing order
   $("#ordering").val('-cash_on_hand');
+  
+  
+  $(".chosen-select").each(function( index ) {
+    $(this).trigger("chosen:updated");
+  });
+  
 }
 
 function search_all() {
@@ -244,28 +257,28 @@ function search_all() {
 
 function get_cmtes() {
   reset_all_fields();
-  $("#committee_class").val('XYZ');
+  $("#committee_class").val('XYZ').trigger("chosen:updated");
   button_load();
 }
 
 
 function get_house() {
   reset_all_fields();
-  $("#committee_class").val('H');
+  $("#committee_class").val('H').trigger("chosen:updated");
   button_load();
 }
 
 
 function get_senate() {
   reset_all_fields();
-  $("#committee_class").val('S');
+  $("#committee_class").val('S').trigger("chosen:updated");
   button_load();
 }
 
 
 function get_superpacs() {
   reset_all_fields();
-  $("#committee_class").val('UOVW');
+  $("#committee_class").val('UOVW').trigger("chosen:updated");
   button_load();
 }
 /* This date stuff is fucking terrible. There's gotta be a better approach */
@@ -330,15 +343,20 @@ function loadjson(jsonurl) {
                numresults = results.length;
                first_result = 100*(pagenumber-1)+1;
                last_result = 100*(pagenumber-1) + numresults;
+               result_size = roundwCommas(data_loaded.count);
 
-               result_string = "Total of " + roundwCommas(data_loaded.count) + " results found. Showing " + first_result + "-" + last_result + ".";
-               $( "#display_info" ).html(result_string);
+               result_string = "<strong>" + result_size + "</strong> results found. ";
+               if (last_result > 0) { 
+                  result_string += "Showing <strong>" + first_result + "-" + last_result + "</strong>."
+               };
+               $( "#results_info" ).html(result_string);
+               
 
                next =  data_loaded.next;
                previous = data_loaded.previous;
 
                if (next != null) {
-                 $( ".load_next" ).html( "<a href=\"javascript:load_next('" + next + "');\">next page<\/a>");
+                 $( ".load_next" ).html( "<a href=\"javascript:load_next('" + next + "');\">Next Page &#8674;<\/a>");
                } else {
                  $( ".load_next" ).html("");
                }
@@ -346,7 +364,7 @@ function loadjson(jsonurl) {
                //$( "#result_description" ).html("<b>This is a text description of the results shown below.</b>")
 
                if (previous != null) {
-                 $( ".load_previous" ).html( "<a href=\"javascript:load_previous('" + previous + "');\">previous page<\/a>");
+                 $( ".load_previous" ).html( "<a href=\"javascript:load_previous('" + previous + "');\">&#8672; Previous Page<\/a>");
                } else {
                  $( ".load_previous" ).html("");
                }
@@ -370,17 +388,19 @@ function loadjson(jsonurl) {
                };
                $( "#maintablebody" ).html( resultrows.join(""));
 
-               if (data_loaded.count <  2000) {
+               if (data_loaded.count <  2000 && data_loaded.count > 0) {
                    var page_re = /&*page=\d+/i;
                    var format_re = /&*format=json/i;
                    var csvurl = jsonurl.replace(page_re, '').replace(format_re, '') + "&format=csv";
                    //console.log("csv url is: " + csvurl);
-                   csv_string = ' Download a <a href="' + csvurl + '">csv file of all '+ roundwCommas(data_loaded.count) +' results</a>.';
-                   $( "#csv_info" ).html(csv_string);
+                   download_info = ' <strong>Download</strong> a csv file of all ' + roundwCommas(data_loaded.count)  + ' results.';
+                   $( "#download_info" ).html(download_info);
+                   $( "#download_block" ).attr("href", csvurl);
+                   $( "#download_block" ).show();
 
                 } else {
-                  $( "#csv_info" ).html("");
-                }
+                   $( "#download_info" ).html("");
+                   $( "#download_block" ).hide();                }
 
                // rerun tablesorter
                remove_tablesorter();
@@ -393,22 +413,6 @@ function loadjson(jsonurl) {
 
 }
 
-/* prob not needed.
-
-function addCommaParser() {
-  $.tablesorter.addParser({
-    id: 'nocomma',
-    is: function(s) {
-      // return false so this parser is not auto detected
-      return false;
-    },
-    format: function(s) {
-      return s.replace(/,/,'');
-    },
-    type: 'numeric'
-  });
-}
-*/
 function addMustacheHelpers() {
 
   Handlebars.registerHelper('addcommas', function(object) {
@@ -456,7 +460,9 @@ $(document).ready(function() {
       $("#" + parts[0]).val(parts[1]);
    });
 
-   //console.log("hashdict is " + hashdict);
+   $(".chosen-select").each(function( index ) {
+     $(this).trigger("chosen:updated");
+   });
    button_load();
 
 
