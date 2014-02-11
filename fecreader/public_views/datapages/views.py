@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.template import RequestContext
 from django.shortcuts import redirect
 from django.contrib.localflavor.us.us_states import US_STATES
+from django.db.models import Sum
 
 from fec_alerts.models import new_filing, newCommittee
 from summary_data.models import Candidate_Overlay, District, Committee_Overlay, Committee_Time_Summary, Authorized_Candidate_Committees, Pac_Candidate
@@ -73,12 +74,12 @@ def candidates(request):
 def senate(request):
 
     title="Senate - Cycle Summary"
-    explanatory_text="Fundraising totals are since the beginning of the election cycle (Jan. 1, 2013) for current U.S. senators and Senate candidates who reported having $1,000 or more. Only candidates actually running in the current cycle who filed a statement of candidacy are included. If we included anyone who isn't running--or missed anyone who is, please <a href='mailto:realtimefec@sunlightfoundation.com'>let us know</a>. Please note these totals reflect current FEC filings and may not match the summarized data available elsewhere on Influence Explorer."
+    explanatory_text="Fundraising totals are since the beginning of the election cycle (Jan. 1, 2013) for current U.S. senators and Senate candidates who reported having $1,000 or more, or who have been targeted by $1,000 or more in independent expenditures. Only candidates actually running in the current cycle who filed a statement of candidacy are included. If we included anyone who isn't running--or missed anyone who is, please <a href='mailto:realtimefec@sunlightfoundation.com'>let us know</a>. Please note these totals reflect current FEC filings and may not match the summarized data available elsewhere on Influence Explorer."
 
     # Give up on ORM for data; we're not willing to enforce all the relationships required for them
     districts = District.objects.filter(office='S')
 
-    legislators = Candidate_Overlay.objects.filter(office='S').filter(Q(cash_on_hand__gte=1000)|Q(is_incumbent=True)).select_related('district').order_by('-cash_on_hand')
+    legislators = Candidate_Overlay.objects.filter(office='S').filter(Q(cash_on_hand__gte=1000)|Q(is_incumbent=True)|Q(total_expenditures__gte=1000)).select_related('district').order_by('-cash_on_hand')
 
     return render_to_response('datapages/senate_legislator_list.html',
         {
@@ -95,10 +96,10 @@ def senate(request):
 def house(request):
 
     title="House - Cycle Summary"
-    explanatory_text="Fundraising totals are for the entire election cycle for current U.S. House members and House candidates who reported having $1,000 or more. Only candidates actually running in the current cycle who filed a statement of candidacy are included. If we included anyone who isn't running--or missed anyone who is, please <a href='mailto:realtimefec@sunlightfoundation.com'>let us know</a>. Please note these totals reflect current FEC filings and may not match the summarized data available elsewhere on Influence Explorer."
+    explanatory_text="Fundraising totals are for the entire election cycle for current U.S. House members and House candidates who reported having $1,000 or more, or who have been targeted by $1,000 or more in independent expenditures. Only candidates actually running in the current cycle who filed a statement of candidacy are included. If we included anyone who isn't running--or missed anyone who is, please <a href='mailto:realtimefec@sunlightfoundation.com'>let us know</a>. Please note these totals reflect current FEC filings and may not match the summarized data available elsewhere on Influence Explorer."
     # Give up on ORM for data; we're not willing to enforce all the relationships required for them
 
-    legislators = Candidate_Overlay.objects.filter(office='H').filter(Q(cash_on_hand__gte=1000)|Q(is_incumbent=True)).select_related('district').order_by('-cash_on_hand')
+    legislators = Candidate_Overlay.objects.filter(office='H').filter(Q(cash_on_hand__gte=1000)|Q(is_incumbent=True)|Q(total_expenditures__gte=1000)).select_related('district').order_by('-cash_on_hand')
     
     districts = District.objects.filter(office='H')
 
@@ -140,7 +141,7 @@ def race_id_redirect(request, race_id):
 def house_race(request, cycle, state, district):
     race = get_object_or_404(District, cycle=cycle, state=state, office_district=district, office='H')
     title = race.race_name()
-    candidates = Candidate_Overlay.objects.filter(district=race, total_receipts__gte=1000).exclude(not_seeking_reelection=True).order_by('-cash_on_hand')
+    candidates = Candidate_Overlay.objects.filter(district=race).filter(Q(total_receipts__gte=1000)|Q(total_expenditures__gte=1000)).exclude(not_seeking_reelection=True).order_by('-cash_on_hand')
     outside_spenders = Pac_Candidate.objects.filter(candidate__in=candidates, total_ind_exp__gte=5000).select_related('committee', 'candidate')
     candidate_list = [x.get('fec_id') for x in candidates.values('fec_id')]
     
@@ -167,7 +168,7 @@ def house_race(request, cycle, state, district):
 def senate_race(request, cycle, state, term_class):
     race = get_object_or_404(District, cycle=cycle, state=state, term_class=term_class, office='S')
     title = race.race_name()
-    candidates = Candidate_Overlay.objects.filter(district=race, total_receipts__gte=1000).exclude(not_seeking_reelection=True).order_by('-total_receipts')
+    candidates = Candidate_Overlay.objects.filter(district=race).filter(Q(total_receipts__gte=1000)|Q(total_expenditures__gte=1000)).exclude(not_seeking_reelection=True).order_by('-total_receipts')
     outside_spenders = Pac_Candidate.objects.filter(candidate__in=candidates, total_ind_exp__gte=5000).select_related('committee', 'candidate')
     candidate_list = [x.get('fec_id') for x in candidates.values('fec_id')]
     
@@ -319,7 +320,7 @@ def filing(request, filing_num):
 @cache_page(LONG_CACHE_TIME)
 def filings_skeda(request, filing_num):
     filing_data = get_object_or_404(new_filing, filing_number=filing_num)
-    title="Contributions, <a href=\"%s\">%s</a> filing #<a href=\"%s\">%s</a>" % (filing_data.get_committee_url(), filing_data.committee_name, filing_data.get_absolute_url(), filing_num)
+    title="Itemized Receipts, <a href=\"%s\">%s</a> filing #<a href=\"%s\">%s</a>" % (filing_data.get_committee_url(), filing_data.committee_name, filing_data.get_absolute_url(), filing_num)
     
     filings = None
     too_many_to_display = False
@@ -438,8 +439,12 @@ def candidate(request, candidate_id):
         end_of_coverage_date = report_list[0].coverage_through_date
         
     
+    recent_report_total = 0
     if end_of_coverage_date:
         recent_report_list = new_filing.objects.filter(fec_id__in=committee_list, coverage_from_date__gte=end_of_coverage_date, form_type__in=['F6', 'F6A', 'F6N']).exclude(is_superceded=True)
+        if recent_report_list:
+            recent_report_total = recent_report_list.aggregate(spending_total=Sum('tot_raised'))['spending_total']
+        
     else:
         recent_report_list = new_filing.objects.filter(fec_id__in=committee_list, coverage_from_date__gte=this_cycle_start, form_type__in=['F6', 'F6A', 'F6N']).exclude(is_superceded=True)
     
@@ -461,6 +466,7 @@ def candidate(request, candidate_id):
         'outside_spenders':outside_spenders,
         'recent_report_list':recent_report_list,
         'recent_ies':recent_ies,
+        'recent_report_total':recent_report_total,
         }, 
         context_instance=RequestContext(request)
     )

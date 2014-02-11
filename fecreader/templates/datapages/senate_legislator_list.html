@@ -153,18 +153,18 @@ $(document).ready(function() {
   
   
   $("#district_checked").chosen().change( function() {
-    console.log('race_chosen: ' + $("#district_checked").val());
+    //console.log('race_chosen: ' + $("#district_checked").val());
     reset_candidates($("#candidate_state_checked").val(), $("#district_checked").val(), $("#candidate_filter").val());
   });
 
   $("#candidate_state_checked").chosen().change( function() {
-    console.log('state_chosen: ' + $("#candidate_state_checked").val());
+    //console.log('state_chosen: ' + $("#candidate_state_checked").val());
     reset_candidates($("#candidate_state_checked").val(), 0, $("#candidate_filter").val());
     reset_races($("#candidate_state_checked").val());
   });
   
   $("#candidate_filter").chosen().change( function() {
-    console.log('incumbency chosen: ' + $("#candidate_filter").val());
+    //console.log('incumbency chosen: ' + $("#candidate_filter").val());
     reset_candidates($("#candidate_state_checked").val(), $("#district_checked").val(), $("#candidate_filter").val());
     
   });
@@ -185,16 +185,17 @@ $(document).ready(function() {
 
 
 function apply_filters() {
-  state_selected = $("#candidate_state_checked").val(), 
-  race_selected = $("#district_checked").val(), 
-  candidate_id_selected = $("#candidate_id_checked").val()
-  incumbency_selected = $("#candidate_filter").val()
-  console.log("Filtering on: state=" + state_selected + " race: " + race_selected + " candidate_id: " + candidate_id_selected + " incumbency_selected: " + incumbency_selected);
+  var state_selected = $("#candidate_state_checked").val();
+  var race_selected = $("#district_checked").val();
+  var candidate_id_selected = $("#candidate_id_checked").val();
+  var incumbency_selected = $("#candidate_filter").val();
+  //console.log("Filtering on: state=" + state_selected + " race: " + race_selected + " candidate_id: " + candidate_id_selected + " incumbency_selected: " + incumbency_selected);
   
   $("#mainPageTable > tbody > tr").each(function(index) {
-    cell_text = $(this).find('td.incumbency').text().trim();
-    state_text = $(this).find('td.cell_state').text().substring(0,2);
-    id = $(this).attr('id')
+    var cell_text = $(this).find('td.incumbency').text();
+    cell_text = $.trim(cell_text);
+    var state_text = $(this).find('td.cell_state').text().substring(0,2);
+    var id = $(this).attr('id')
     id_pieces = id.split("-");
     race_id = id_pieces[0];
     fec_id = id_pieces[1];
@@ -226,9 +227,10 @@ function show_all() {
 
 function hide_challengers() {
     $("#mainPageTable > tbody > tr").each(function(index) {
-      cell_text = $(this).find('td.incumbency').text().trim();
+      var cell_text = $(this).find('td.incumbency').text()
+      cell_text = $.trim(cell_text);
       if (cell_text == 'N') {
-        console.log(index + " " + cell_text);
+        //console.log(index + " " + cell_text);
         $(this).hide();
       } else {
         $(this).show();
@@ -239,9 +241,10 @@ function hide_challengers() {
 
 function hide_incumbents() {
     $("#mainPageTable > tbody > tr").each(function(index) {
-      cell_text = $(this).find('td.incumbency').text().trim();
+      var cell_text = $(this).find('td.incumbency').text()
+      cell_text = $.trim(cell_text);
       if (cell_text == 'Y') {
-        console.log(index + " " + cell_text);
+        //console.log(index + " " + cell_text);
         $(this).hide();
       } else {
         $(this).show();
